@@ -14,7 +14,7 @@ export default function LoginForm() {
     const router = useRouter();
     const params = useSearchParams()
 
-    const { status, isLogin, data } = useAppSelector((state) => state.auth);
+    const { status, isLogin, data } = useAppSelector((state) => state.authCredentials);
     const handleSubmit = (event: { preventDefault: () => void }) => {
         event.preventDefault();
         try {
@@ -28,8 +28,8 @@ export default function LoginForm() {
 
         if (status === 'succeeded' && isLogin) {
             toast.success('Login successful!');
-            dispatch(getCart({ userId: data?.id || '' }));
             dispatch(resetAuthStatus());
+            dispatch(getCart({ userId: data?.id || '' }))
             router.push(params.get("callbackUrl") || "/");
         } else if (status === 'failed') {
             toast.error(`Tài khoản mật khẩu không chính xác`);

@@ -3,74 +3,42 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Result, Spin } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { getCart, resetCart } from '@/redux/features/cartSlice';
-import { formattedDateTime } from '@/helpers/helper';
-interface DataOrder {
-    id: string,
-    orderType: string,
-    address: string,
-    phone: string,
-    recipientName: string,
-    subTotal: number,
-    total: number,
-    totalDiscount: number,
-    dateCreate: Date,
-    notes: string
-};
-// pages/payment_return.js
+import { paymentVnpay } from '@/redux/features/cartSlice';
 
-const PaymentReturn = () => {
+export default function CheckoutReturn() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [statusMessage, setStatusMessage] = useState('');
-    const [paymentData, setPaymentData] = useState<DataOrder | null>(null);
-    const auth = useAppSelector((state) => state.auth);
-    const cart = useAppSelector((state) => state.cart);
+    const auth = useAppSelector((state) => state.authCredentials);
+    const cart = useAppSelector((state) => state.cartCredentials);
     const dispatch = useAppDispatch();
-
     const searchParams = useSearchParams();
     const fetchInitiated = useRef(false);
 
     useEffect(() => {
         if (fetchInitiated.current) return;
         fetchInitiated.current = true;
+        console.log(cart);
 
         const savePaymentData = async () => {
-            try {
-                const txnRef = searchParams.get('vnp_TxnRef')
-                console.log(txnRef);
-                const response = await fetch(
-                    `${process.env.API_URL}/Payment/create-order/${txnRef}`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        }
-                    }
-                );
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                console.log(response);
-                const data = await response.json();
-                setPaymentData(data.data);
-                setStatusMessage('Thanh toán thành công!');
-                dispatch(resetCart());
-
-            } catch (error) {
-                setStatusMessage('Thanh toán thất bại!');
-                console.error('Error saving payment data:', error);
-            } finally {
-                setLoading(false);
-            }
+            const txnRef = searchParams.get('vnp_TxnRef');
+            dispatch(paymentVnpay({ txnRef: txnRef || '' }));
         };
 
         if (searchParams.get('vnp_ResponseCode') === '00') {
-            savePaymentData();
+            savePaymentData().finally(() => setLoading(false));
         } else {
             setLoading(false);
         }
-    }, [searchParams, dispatch, auth]);
+    }, [searchParams, cart, dispatch]);
+
+    useEffect(() => {
+        if (cart && cart.statusOrder === 'succeeded' && cart.orderInfo) {
+            setStatusMessage("Thanh toan thanh cong");
+        } else if (cart && cart.statusOrder === 'failed') {
+            setStatusMessage("Thanh toan that bai");
+        }
+    }, [cart]);
 
     if (loading) {
         return <Spin size="large" />;
@@ -84,14 +52,12 @@ const PaymentReturn = () => {
                 title={statusMessage}
                 subTitle={searchParams.get('vnp_ResponseCode') === '00' ? (
                     <div>
-                        <p>Mã giao dịch: {paymentData?.id || ''}</p>
-                        <p>Số tiền: {paymentData?.total}</p>
-                        <p>Ngày: {formattedDateTime(paymentData?.dateCreate || new Date())}</p>
+                        <p>Mã giao dịch: </p>
+                        <p>Số tiền: </p>
+                        <p>Ngày: </p>
                     </div>
                 ) : null}
             />
         </div>
     );
 };
-
-export default PaymentReturn;

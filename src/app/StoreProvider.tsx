@@ -1,9 +1,9 @@
 'use client'
-import { useRef } from 'react'
 import { Provider } from 'react-redux'
 import { persistor, store } from '@/redux/store'
 
 import { PersistGate } from 'redux-persist/integration/react';
+import { SessionProvider } from 'next-auth/react';
 export default function StoreProvider({
     children,
 }: {
@@ -13,8 +13,8 @@ export default function StoreProvider({
     return (
         <Provider store={store}>
 
-            <PersistGate loading={null} persistor={persistor}>
-                {children}
+            <PersistGate persistor={persistor}>
+                <SessionProvider>{children}</SessionProvider>
             </PersistGate>
 
         </Provider>)

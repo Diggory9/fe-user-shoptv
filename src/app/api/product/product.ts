@@ -2,6 +2,7 @@
 const ApiProduct = {
     async getProductPublished({ pageNumber = 1, pageSize = 10 }) {
         try {
+            console.log('api', process.env.API_URL);
             const response = await fetch(
                 `${process.env.API_URL}/Product/list-publish?pageNumber=${pageNumber}&pageSize=${pageSize}`,
                 {

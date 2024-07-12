@@ -3,6 +3,4 @@ export interface AuthModel {
     userName?: string;
     email?: string;
     role?: [string];
-    jwToken?: string;
-    refreshToken?: string;
 }

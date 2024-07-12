@@ -58,8 +58,8 @@ export default function Review({ productId }: { productId: string }) {
                                 <div className="list-none mb-0" key={item.id}>
                                     <div className="py-4 border-b border-gray-200">
                                         <div className="text-gray-600">
-                                            <p className="text-sm mb-4">
-                                                Đánh giá bởi {item.userName} vào &nbsp; {formattedDateTime(new Date(item.createAt))}
+                                            <p className="text-sm mb-4 flex justify-between">
+                                                <span> Đánh giá bởi {item.userName} vào: </span> <span>{formattedDateTime(new Date(item.createAt))}</span>
                                             </p>
                                             <Rate
                                                 allowHalf

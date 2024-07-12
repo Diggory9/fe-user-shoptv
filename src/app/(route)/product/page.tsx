@@ -1,5 +1,4 @@
 "use client";
-
 import ApiProduct from "@/app/api/product/product";
 import CardProduct from "@/components/ui/card-product";
 import CategoryMenu from "@/components/ui/category-menu";
@@ -32,9 +31,7 @@ export default function CProduct() {
             }
         };
         fetchData();
-
-        console.log("GOOGLE_CLIENT_ID", process.env.GOOGLE_CLIENT_SECRET);
-    }, []);
+    }, [pageSize, pageNumber]);
     const handleOnSelectCategory = (value: string) => {
         if (value === "All") {
             try {
@@ -64,7 +61,7 @@ export default function CProduct() {
             }
         }
     }
-
+    // ve sau add loading data
     return (
         <div className="bg-white flex flex-col sm:flex-row w-full mx-5 mt-10">
             <button

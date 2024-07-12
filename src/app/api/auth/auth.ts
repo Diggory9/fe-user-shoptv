@@ -1,4 +1,4 @@
-import fetchBaseAuth from "@/app/api/base-api";
+
 import { rejects } from "assert";
 
 const ApiAuth = {
@@ -27,7 +27,7 @@ const ApiAuth = {
     },
     async authLogout({ email }: { email: string }) {
         try {
-            const response = await fetchBaseAuth(
+            const response = await fetch(
                 `${process.env.API_URL}/Account/logout?userEmail=${email}`,
                 {
                     method: "GET",

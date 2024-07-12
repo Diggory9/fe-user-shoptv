@@ -19,8 +19,8 @@ export default function CheckOutPage() {
     const [dataReview, setDataReview] = useState<ReviewCheckoutModel | null>(null);
     const [form] = Form.useForm();
     const router = useRouter();
-    const cart = useAppSelector((state) => state.cart);
-    const auth = useAppSelector((state) => state.auth);
+    const cart = useAppSelector((state) => state.cartCredentials);
+    const auth = useAppSelector((state) => state.authCredentials);
     const dispatch = useAppDispatch();
     useEffect(() => {
         const fetchProvinces = async () => {
