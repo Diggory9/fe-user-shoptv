@@ -1,23 +1,27 @@
 import { checkIfTokenExpired } from '@/utils/tokenUtils';
-import { RootState, store } from '../../redux/store';
-import { refreshToken } from '@/redux/features/authSlice';
+import ApiAuth from '@/app/api/auth/auth';
 
 const fetchBaseAuth = async (input: RequestInfo, init?: RequestInit): Promise<Response> => {
     try {
-        const { data } = store.getState().auth;// null
-        if (data?.jwToken) {
-            const checkAccessTokenExpired = checkIfTokenExpired(data?.jwToken)
-            if (checkAccessTokenExpired)
-                store.dispatch(refreshToken({ email: data.email || "", refreshToken: data.refreshToken || "" }));
+        let accessToken = localStorage.getItem('accessToken') ? JSON.parse(localStorage.getItem('accessToken') || '') : null;
+        const refreshToken = localStorage.getItem('refreshToken') ? JSON.parse(localStorage.getItem('refreshToken') || '') : null;
+        const email = localStorage.getItem('email') ? JSON.parse(localStorage.getItem('email') || '') : null;
+        if (accessToken) {
+            const checkAccessTokenExpired = checkIfTokenExpired(accessToken)
+            if (checkAccessTokenExpired) {
+                const response = await ApiAuth.authRefresh({ email: email || "", refreshToken: refreshToken || "" });
+                const data = response.data;
+                localStorage.setItem('accessToken', JSON.stringify(data?.jwToken));
+                localStorage.setItem('accessToken', JSON.stringify(data?.refreshToken));
+                accessToken = data?.accessToken;
+            }
+
         }
-
-
-
         const updatedInit = {
             ...init,
             headers: {
                 ...init?.headers,
-                'Authorization': `Bearer ${data?.jwToken || ""}`,
+                'Authorization': `Bearer ${accessToken || ""}`,
             },
         };
 

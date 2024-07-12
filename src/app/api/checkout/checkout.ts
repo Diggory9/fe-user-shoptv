@@ -1,10 +1,9 @@
-import fetchBaseAuth from "@/app/api/base-api";
 
 
 export const ApiCheckout = {
     async reviewCart(body: any) {
         try {
-            const response = await fetchBaseAuth(`${process.env.API_URL}/Order/review-checkout`, {
+            const response = await fetch(`${process.env.API_URL}/Order/review-checkout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,7 +22,7 @@ export const ApiCheckout = {
     },
     async saveOrder(body: any) {
 
-        const response = await fetchBaseAuth(`${process.env.API_URL}/Order/create`, {
+        const response = await fetch(`${process.env.API_URL}/Order/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

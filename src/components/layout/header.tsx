@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Search from "antd/es/input/Search";
@@ -8,35 +7,40 @@ import { toast, Toaster } from "sonner";
 import { logout } from "@/redux/features/authSlice";
 import { Badge, Button } from "antd";
 import CartDrawer from "@/components/ui/cart-drawer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getCart, resetCart } from "@/redux/features/cartSlice";
+
 export default function Header() {
     const router = useRouter();
     const [open, setOpen] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useAppDispatch();
-    const auth = useAppSelector((state) => state.auth);
-    const cart = useAppSelector((state) => state.cart);
-    // const { Search } = Input;
-    // const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
-    //     console.log(info?.source, value);
+    const auth = useAppSelector((state) => state.authCredentials);
+    const cart = useAppSelector((state) => state.cartCredentials);
+
+    useEffect(() => {
+
+        if ((auth.isLogin && cart?.status === "idle")) {
+            dispatch(getCart({ userId: auth.data?.id || "" }));
+        }
+        else if (auth && auth.data === null) {
+            console.log(',.,,óa')
+            dispatch(resetCart());
+        }
+    }, [auth.isLogin, auth.data?.id, cart?.status, dispatch]);
 
     const handerLogout = async () => {
-        try {
+        if (auth.isLogin) {
+            const logoutParams = {
+                email: auth?.data?.email || "",
+            };
+            dispatch(logout(logoutParams));
+            toast.success("Đăng xuất thành công!");
 
-            if (auth.isLogin) {
-                var logoutParams = {
-                    email: auth?.data?.email || ""
-                }
-                dispatch(logout(logoutParams));
-                toast.success("Đăng xuất thành công!");
-            }
-        } catch (error) {
-            alert("Logout failed");
-            console.error("Logout error:", error);
+        } else {
+            toast.error("Logout failed");
         }
     };
-
 
     const showLoading = () => {
         if (!auth.isLogin) {
@@ -44,13 +48,7 @@ export default function Header() {
             return;
         }
         setOpen(true);
-        setLoading(true);
-
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
     };
-
 
     return (
         <nav className="flex py-5 bg-white shadow-xl border-y-2">
@@ -128,7 +126,6 @@ export default function Header() {
                     </ul>
                 </div>
 
-
                 <div className="basis-1/4 flex">
                     <ul className="flex">
                         {auth?.isLogin ? (
@@ -162,7 +159,7 @@ export default function Header() {
                             </>
                         )}
                         <li className="pl-3">
-                            <Badge count={!cart || cart?.data?.length! === 0 ? 0 : cart?.data?.length} style={{ display: !cart || cart?.data?.length! === 0 ? 'none' : 'block' }}>
+                            <Badge count={cart?.data?.length || 0} style={{ display: !cart || cart?.data?.length === 0 ? 'none' : 'block' }}>
                                 <Button onClick={showLoading}>
                                     <ShoppingCartOutlined
                                         style={{
@@ -174,9 +171,9 @@ export default function Header() {
 
                             <CartDrawer
                                 open={open}
-                                loading={loading}
+                                loading={cart?.status === 'loading'}
                                 setOpen={setOpen}
-                            ></CartDrawer>
+                            />
                         </li>
                     </ul>
                 </div>

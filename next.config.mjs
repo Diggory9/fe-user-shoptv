@@ -4,7 +4,7 @@ const nextConfig = {
         domains: ["res.cloudinary.com"],
     },
     env: {
-        API_URL: process.env.NEXT_PUBLIC_API,
+        API_URL: process.env.NEXT_PUBLIC_API_URL,
         TOKEN_GHN: process.env.NEXT_PUBLIC_TOKEN_GHN
     }
 };

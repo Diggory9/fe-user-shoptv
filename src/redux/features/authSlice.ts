@@ -17,19 +17,20 @@ const initialState: UserState = {
     error: null,
     status: null,
 }
-
-
-export const refreshToken = createAsyncThunk('user/refresh-token', async ({ email, refreshToken }: { email: string, refreshToken: string }) => {
-
-    const response = await ApiAuth.authRefresh({ email: email, refreshToken: refreshToken });
-    return response.data;
-});
 export const login = createAsyncThunk('user/login', async ({ email, password }: { email?: string, password?: string }) => {
     const response = await ApiAuth.authLogin({ email, password });
-    return response.data;
+    const data = response.data;
+    const { jwToken, refreshToken } = data;
+    localStorage.setItem('accessToken', JSON.stringify(jwToken));
+    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+    localStorage.setItem('email', JSON.stringify(email));
+    return data;
 });
 export const logout = createAsyncThunk('user/logout', async ({ email }: { email: string }) => {
     await ApiAuth.authLogout({ email })
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('email');
 });
 const authSlice = createSlice({
     name: 'auth',
@@ -38,16 +39,11 @@ const authSlice = createSlice({
         resetAuthStatus(state) {
             state.status = null;
         },
-    }, extraReducers(buiders) {
-        buiders.addCase(refreshToken.fulfilled, (state, action) => {
+        setAuth(state, action) {
+            state.status = null;
             state.data = action.payload;
-            state.error = null;
-            state.status = 'succeeded';
-        });
-        buiders.addCase(refreshToken.rejected, (state, action) => {
-            state.error = action.error.message || "";
-            state.status = 'failed';
-        });
+        },
+    }, extraReducers(buiders) {
         buiders.addCase(login.fulfilled, (state, action) => {
             state.data = action.payload;
             state.isLogin = true;

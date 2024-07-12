@@ -21,8 +21,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
     loading = false,
     setOpen,
 }) => {
-    const cart = useAppSelector((state) => state.cart);
-    const auth = useAppSelector((state) => state.auth);
+    const cart = useAppSelector((state) => state.cartCredentials);
+    const auth = useAppSelector((state) => state.authCredentials);
     const dispatch = useAppDispatch();
 
     // tính tiền giảm giá

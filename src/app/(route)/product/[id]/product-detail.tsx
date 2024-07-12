@@ -21,8 +21,8 @@ export const DetailProduct = ({ data }: { data: any }) => {
     const [productItemId, setProductItemId] = useState(data.productItems[0].id);
     const [quantity, setQuantity] = useState<number>(1);
     const router = useRouter();
-    const cart = useAppSelector((state) => state.cart);
-    const auth = useAppSelector((state) => state.auth);
+    const cart = useAppSelector((state) => state.cartCredentials);
+    const auth = useAppSelector((state) => state.authCredentials);
     useEffect(() => {
         const productBeforeItemSelected = updateProductItemSelected(
             data,
@@ -95,8 +95,8 @@ export const DetailProduct = ({ data }: { data: any }) => {
                 <div className="lg:flex lg:items-center lg:justify-between">
                     <div className="lg:w-1/2">
                         {product &&
-                        product.productItems &&
-                        product.productItems.length > 0 ? (
+                            product.productItems &&
+                            product.productItems.length > 0 ? (
                             <>
                                 <CImageGallery product={product} />
                             </>
@@ -173,7 +173,7 @@ export const DetailProduct = ({ data }: { data: any }) => {
                                                 quantity >
                                                     (product?.productQuantity
                                                         ? product?.productQuantity -
-                                                          1
+                                                        1
                                                         : 98)
                                                     ? product?.productQuantity
                                                         ? product?.productQuantity

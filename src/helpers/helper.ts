@@ -3,9 +3,7 @@ export const numberFormatLocationVietNam = (number: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
 }
 export const formattedDateTime = (date: any) => {
-    // Check if the date is already a Date object
     if (!(date instanceof Date)) {
-        // If not, try to convert it to a Date object
         date = new Date(date);
     }
 
