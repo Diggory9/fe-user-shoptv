@@ -8,11 +8,12 @@ const fetchBaseAuth = async (input: RequestInfo, init?: RequestInit): Promise<Re
         const email = localStorage.getItem('email') ? JSON.parse(localStorage.getItem('email') || '') : null;
         if (accessToken) {
             const checkAccessTokenExpired = checkIfTokenExpired(accessToken)
+
             if (checkAccessTokenExpired) {
                 const response = await ApiAuth.authRefresh({ email: email || "", refreshToken: refreshToken || "" });
                 const data = response.data;
                 localStorage.setItem('accessToken', JSON.stringify(data?.jwToken));
-                localStorage.setItem('accessToken', JSON.stringify(data?.refreshToken));
+                localStorage.setItem('refreshToken', JSON.stringify(data?.refreshToken));
                 accessToken = data?.accessToken;
             }
 
