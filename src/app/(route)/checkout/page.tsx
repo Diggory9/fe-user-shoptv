@@ -31,7 +31,7 @@ export default function CheckOutPage() {
                     setDataProvince(res.data);
                 })
                 .catch((err) => {
-                    console.error("Error during fetch:", err);
+                    console.error("Error fetch :", err);
                 });
         };
 
