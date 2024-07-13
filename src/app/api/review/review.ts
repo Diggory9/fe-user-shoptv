@@ -1,7 +1,7 @@
 import { CreateReviewModel } from "@/models/review-model";
 
 const ApiReview = {
-    async createReview(values: CreateReviewModel) {
+    async createReview(values: {}) {
 
         const response = await fetch(`${process.env.API_URL}/Review/create-review`, {
             method: "POST",
