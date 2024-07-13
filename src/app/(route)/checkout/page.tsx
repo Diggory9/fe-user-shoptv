@@ -130,16 +130,14 @@ export default function CheckOutPage() {
                 await ApiCheckout.saveOrder(payload).then((response) => {
                     if (response.ok) {
                         //toast.success("Đặt hàng thành công");
-                        response.json().then((data) => {
-                            localStorage.setItem(
-                                "dataOrder",
-                                JSON.stringify(data)
-                            );
-                            console.log(data);
 
-                            dispatch(getCart({ userId: auth.data?.id || "" }));
-                            router.push("/checkout/result");
-                        });
+                        const dataOrder = response.json();
+                        localStorage.setItem(
+                            "dataOrder",
+                            JSON.stringify(dataOrder)
+                        );
+                        dispatch(getCart({ userId: auth.data?.id || "" }));
+                        router.push("/checkout/result");
                     } else {
                         toast.error(
                             "Đơn đặt hàng không thành công xin thử lại sau ít phút"
