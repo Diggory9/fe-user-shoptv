@@ -1,9 +1,12 @@
+import dayjs from "dayjs";
 
 export const numberFormatLocationVietNam = (number: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
 }
 export const formattedDateTime = (date: any) => {
+    // Check if the date is already a Date object
     if (!(date instanceof Date)) {
+        // If not, try to convert it to a Date object
         date = new Date(date);
     }
 
@@ -31,3 +34,10 @@ export const handlePriceBeforeDiscount = ({ price, typeDiscout, valueDiscount }:
         return price - valueDiscount!;
     }
 }
+export const formatDateToRender = (date?: Date | string) => {
+    if (!date) return '';
+    return formatDate(date, 'DD/MM/YYYY');
+};
+export const formatDate = (date?: Date | string | dayjs.Dayjs | null, format?: string) => {
+    return dayjs(date || new Date()).format(format || 'YYYY-MM-DD');
+};
