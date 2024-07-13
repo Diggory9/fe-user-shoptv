@@ -4,7 +4,7 @@ const ApiOrder = {
     async getDetailOrder(id: string) {
         try {
             const response = await fetch(
-                `${process.env.API_URL}Order/${id}`,
+                `${process.env.API_URL}/Order/${id}`,
                 {
                     method: "POST",
                     headers: {
@@ -21,7 +21,7 @@ const ApiOrder = {
     async getOrders(pageNumber: number, pageSize: number) {
         try {
             const response = await fetch(
-                `${process.env.API_URL}Order/list?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+                `${process.env.API_URL}/Order/list?pageNumber=${pageNumber}&pageSize=${pageSize}`,
                 {
                     method: "POST",
                     headers: {
@@ -43,7 +43,7 @@ const ApiOrder = {
     async getOrdersByUserId(userId: string) {
         try {
             const response = await fetch(
-                `${process.env.API_URL}Order/user/${userId}`,
+                `${process.env.API_URL}/Order/user/${userId}`,
                 {
                     method: "POST",
                     headers: {
@@ -59,7 +59,7 @@ const ApiOrder = {
     },
     async updateStatusOrder(id?: string, status?: string) {
         try {
-            const response = await fetch(`${process.env.API_URL}Order/status`, {
+            const response = await fetch(`${process.env.API_URL}/Order/status`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -47,7 +47,7 @@ export default function CheckOutPage() {
             console.log(payload);
 
             await ApiCheckout.reviewCart(payload).then((res) => {
-                setDataReview(res.data);
+                setDataReview(res?.data);
             });
         };
 
