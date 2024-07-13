@@ -2,8 +2,6 @@
 import ApiAuth from '@/app/api/auth/auth';
 import { AuthModel } from '@/models/auth-model';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
-import Item from 'antd/es/list/Item';
 interface UserState {
     isLogin: boolean;
     data: AuthModel | null;
@@ -26,6 +24,16 @@ export const login = createAsyncThunk('user/login', async ({ email, password }: 
     localStorage.setItem('email', JSON.stringify(email));
     return data;
 });
+export const externalLogin = createAsyncThunk('user/externalLogin', async ({ provider, idToken }: { provider: string, idToken: string }) => {
+    const response = await ApiAuth.authExternalLogin({ provider, idToken });
+    const data = response.data;
+    const { jwToken, refreshToken, email } = data;
+    console.log(data);
+    localStorage.setItem('accessToken', JSON.stringify(jwToken));
+    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+    localStorage.setItem('email', JSON.stringify(email));
+    return data;
+});
 export const logout = createAsyncThunk('user/logout', async ({ email }: { email: string }) => {
     await ApiAuth.authLogout({ email })
     localStorage.removeItem('accessToken');
@@ -39,8 +47,8 @@ const authSlice = createSlice({
         resetAuthStatus(state) {
             state.status = null;
         },
-        setAuth(state, action) {
-            state.status = null;
+        setAuthData(state, action) {
+            state.isLogin = true;
             state.data = action.payload;
         },
     }, extraReducers(buiders) {
@@ -60,8 +68,18 @@ const authSlice = createSlice({
             state.error = null;
             state.status = null;
         });
+        buiders.addCase(externalLogin.fulfilled, (state, action) => {
+            state.data = action.payload;
+            state.isLogin = true;
+            state.error = null;
+            state.status = 'succeeded';
+        });
+        buiders.addCase(externalLogin.rejected, (state, action) => {
+            state.error = action.error.message || "";
+            state.status = 'failed';
+        });
     }
 });
 
-export const { resetAuthStatus } = authSlice.actions;
+export const { resetAuthStatus, setAuthData } = authSlice.actions;
 export default authSlice.reducer;
