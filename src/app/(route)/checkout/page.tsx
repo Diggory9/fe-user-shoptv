@@ -130,17 +130,19 @@ export default function CheckOutPage() {
             try {
 
                 await ApiCheckout.saveOrder(payload).then((response) => {
-                    console.log("data: ", response);
                     if (response.ok) {
                         //toast.success("Đặt hàng thành công");
+                        response.json().then(data => {
+                            localStorage.setItem(
+                                "dataOrder",
+                                JSON.stringify(data)
+                            );
+                            console.log(data);
 
-                        const dataOrder = response.json();
-                        localStorage.setItem(
-                            "dataOrder",
-                            JSON.stringify(dataOrder)
-                        );
-                        dispatch(getCart({ userId: auth.data?.id || '' }))
-                        router.push("/checkout/result");
+                            dispatch(getCart({ userId: auth.data?.id || '' }))
+                            router.push("/checkout/result");
+                        });
+
                     } else {
                         toast.error("Đơn đặt hàng không thành công xin thử lại sau ít phút");
                         throw new Error("Failed to add product");

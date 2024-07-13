@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Result, Spin } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { paymentVnpay } from '@/redux/features/cartSlice';
+import { getCart, paymentVnpay } from '@/redux/features/cartSlice';
 
 export default function CheckoutReturn() {
     const router = useRouter();
@@ -35,10 +35,11 @@ export default function CheckoutReturn() {
     useEffect(() => {
         if (cart && cart.statusOrder === 'succeeded' && cart.orderInfo) {
             setStatusMessage("Thanh toan thanh cong");
+            dispatch(getCart({ userId: auth.data?.id || '' }))
         } else if (cart && cart.statusOrder === 'failed') {
             setStatusMessage("Thanh toan that bai");
         }
-    }, [cart]);
+    }, []);
 
     if (loading) {
         return <Spin size="large" />;
