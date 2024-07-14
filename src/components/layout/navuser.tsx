@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import {
+    KeyOutlined,
     SkinOutlined,
     SolutionOutlined,
     TruckOutlined,
@@ -23,6 +24,11 @@ export default function NavUser() {
             key: "2",
             icon: <SolutionOutlined />,
             label: <Link href={"/user/purchase"}>Đơn hàng</Link>,
+        },
+        {
+            key: "3",
+            icon: <KeyOutlined />,
+            label: <Link href={"/user/reset-password"}>Đổi mật khẩu</Link>,
         },
     ];
 

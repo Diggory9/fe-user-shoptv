@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
     externalLogin,
@@ -95,7 +95,7 @@ export default function LoginForm() {
                         },
                     ]}
                 >
-                    <Input
+                    <Input.Password
                         prefix={
                             <LockOutlined className="site-form-item-icon" />
                         }
@@ -105,7 +105,7 @@ export default function LoginForm() {
                 </Form.Item>
                 <div className="flex">
                     <Form.Item>
-                        <Link className="login-form-forgot" href="">
+                        <Link className="font-semibold" href="">
                             Quên mật khẩu?
                         </Link>
                     </Form.Item>
@@ -115,7 +115,10 @@ export default function LoginForm() {
                     Đăng nhập
                 </Button>
                 <div className="pt-3">
-                    Hoặc <Link href="/register">Đăng ký ngay</Link>
+                    Hoặc{" "}
+                    <Link href="/register" className="font-bold">
+                        Đăng ký ngay
+                    </Link>
                 </div>
             </Form>
             <GoogleSignInButton />

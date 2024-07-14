@@ -122,6 +122,34 @@ const ApiAuth = {
         } catch (error) {
             return Promise.reject(error);
         }
+    },
+
+    async authChangePassWord({ email, currentPassword, password, confirmPassword }: { email: string, currentPassword: string, password: string, confirmPassword: string }) {
+        try {
+            const response = await fetch(
+                `${process.env.API_URL}/Account/reset-password`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email,
+                        currentPassword,
+                        password,
+                        confirmPassword,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response;
+
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
     }
 }
 export default ApiAuth;

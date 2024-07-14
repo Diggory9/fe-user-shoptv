@@ -88,7 +88,7 @@ export default function RegisterForm() {
                     },
                 ]}
             >
-                <Input
+                <Input.Password
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
                     placeholder="Password"
@@ -113,7 +113,7 @@ export default function RegisterForm() {
                     }),
                 ]}
             >
-                <Input
+                <Input.Password
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
                     placeholder="ConfirmPassword"
@@ -123,7 +123,10 @@ export default function RegisterForm() {
                 Đăng ký
             </Button>
             <div className="pt-3">
-                Nếu có tài khoản <Link href="/login">Đăng nhập</Link>
+                Nếu có tài khoản{" "}
+                <Link className="font-bold" href="/login">
+                    Đăng nhập
+                </Link>
             </div>
         </Form>
     );
