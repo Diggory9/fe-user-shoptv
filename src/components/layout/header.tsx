@@ -10,7 +10,7 @@ import CartDrawer from "@/components/ui/cart-drawer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCart, resetCart } from "@/redux/features/cartSlice";
-import CustomDropdown from "../ui/DropDownUser";
+import { signOut } from "next-auth/react";
 
 export default function Header() {
     const router = useRouter();
@@ -22,8 +22,7 @@ export default function Header() {
     useEffect(() => {
         if (auth.isLogin && cart?.status === "idle") {
             dispatch(getCart({ userId: auth.data?.id || "" }));
-        } else if (auth && auth.data === null) {
-            console.log(",.,,óa");
+        } else if (auth && auth.isLogin === false) {
             dispatch(resetCart());
         }
     }, [auth.isLogin, auth.data?.id, cart?.status, dispatch]);
@@ -34,6 +33,9 @@ export default function Header() {
                 email: auth?.data?.email || "",
             };
             dispatch(logout(logoutParams));
+
+            signOut(); // Gọi hàm signOut từ hook useGoogleLogout
+            dispatch(resetCart());
             toast.success("Đăng xuất thành công!");
         } else {
             toast.error("Logout failed");
