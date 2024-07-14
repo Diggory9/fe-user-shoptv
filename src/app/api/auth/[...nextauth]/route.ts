@@ -4,6 +4,8 @@ import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { DefaultSession } from "next-auth";
+import { store } from "@/redux/store";
+import { externalLogin } from "@/redux/features/authSlice";
 declare module 'next-auth' {
     interface Session extends DefaultSession {
         accessToken: string;
@@ -31,9 +33,6 @@ const handler = NextAuth({
         async signIn({ user, account }) {
             if (account && (account.provider === 'google')) {
                 console.log('user', user, account);
-                // gọi api 
-
-
             }
             return true;
         },
