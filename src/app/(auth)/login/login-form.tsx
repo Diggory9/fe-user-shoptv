@@ -1,105 +1,124 @@
 "use client";
 import { useEffect, useState } from "react";
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { Toaster, toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { externalLogin, login, resetAuthStatus } from "@/redux/features/authSlice";
+import {
+    externalLogin,
+    login,
+    resetAuthStatus,
+} from "@/redux/features/authSlice";
 import { GoogleSignInButton } from "@/components/ui/auth-button";
 import { getCart } from "@/redux/features/cartSlice";
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
+import { Button, Form, Input } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import Link from "next/link";
 export default function LoginForm() {
+    const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-    const { data: session, status } = useSession()
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const { data: session, status } = useSession();
     const router = useRouter();
-    const params = useSearchParams()
+    const params = useSearchParams();
     const [isLoggin, setIsLogin] = useState(false);
     const auth = useAppSelector((state) => state.authCredentials);
-    const handleSubmit = (event: { preventDefault: () => void }) => {
-        event.preventDefault();
-        try {
-            dispatch(login({ email, password }));
+    const onFinish = (value: any) => {
+        console.log(value);
 
+        try {
+            dispatch(
+                login({
+                    email: value.userNameOrEmail,
+                    password: value?.password,
+                })
+            );
         } catch (error) {
             console.error("Error during fetch:", error);
         }
     };
     useEffect(() => {
-
-        if (auth.status === 'succeeded' && auth.isLogin) {
-            toast.success('Login successful!');
+        if (auth.status === "succeeded" && auth.isLogin) {
+            toast.success("Login successful!");
             dispatch(resetAuthStatus());
-            dispatch(getCart({ userId: auth.data?.id || '' }))
+            dispatch(getCart({ userId: auth.data?.id || "" }));
             router.push(params.get("callbackUrl") || "/");
-        } else if (auth.status === 'failed') {
+        } else if (auth.status === "failed") {
             toast.error(`Tài khoản mật khẩu không chính xác`);
             dispatch(resetAuthStatus());
         }
     }, [status, router, params, auth, dispatch]);
     useEffect(() => {
-        console.log(session)
-        if (status === 'authenticated' && session?.idToken && isLoggin == false) {
-            console.log('Session authenticated with Google');
-            dispatch(externalLogin({ idToken: session.idToken, provider: 'google' }));
+        console.log(session);
+        if (
+            status === "authenticated" &&
+            session?.idToken &&
+            isLoggin == false
+        ) {
+            console.log("Session authenticated with Google");
+            dispatch(
+                externalLogin({ idToken: session.idToken, provider: "google" })
+            );
             setIsLogin(true);
             redirect(params.get("callbackUrl") || "/");
         }
     }, [session]);
     return (
-        <> <form
-            className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-16"
-            onSubmit={handleSubmit}
-        >
-            <div>
-                <label
-                    htmlFor="email"
-                    className="block text-xs text-gray-600 uppercase"
-                >
-                    Địa chỉ email
-                </label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    required
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2"
-                />
-            </div>
-            <div>
-                <label
-                    htmlFor="password"
-                    className="block text-xs text-gray-600 uppercase"
-                >
-                    Mật khẩu
-                </label>
-                <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    required
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2"
-                />
-            </div>
-            <button
-                type="submit"
-                className="flex h-10 w-full  items-center justify-center rounded-md border border-gray-600 text-sm "
+        <>
+            <Form
+                form={form}
+                className="login-form"
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
             >
-                Đăng nhập
-            </button>
+                <Form.Item
+                    name="userNameOrEmail"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your Username!",
+                        },
+                    ]}
+                >
+                    <Input
+                        prefix={
+                            <UserOutlined className="site-form-item-icon" />
+                        }
+                        placeholder="Username"
+                    />
+                </Form.Item>
+                <Form.Item
+                    name="password"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your Password!",
+                        },
+                    ]}
+                >
+                    <Input
+                        prefix={
+                            <LockOutlined className="site-form-item-icon" />
+                        }
+                        type="password"
+                        placeholder="Password"
+                    />
+                </Form.Item>
+                <div className="flex">
+                    <Form.Item>
+                        <Link className="login-form-forgot" href="">
+                            Quên mật khẩu?
+                        </Link>
+                    </Form.Item>
+                </div>
 
-        </form>
-            <p className="text-center text-sm text-gray-600 m-3">
-                Bạn chưa có tài khoản?{" "}
-                <a className="font-semibold text-gray-800 " href="/register">
-                    Đăng ký
-                </a>
-            </p>
-
+                <Button type="primary" htmlType="submit">
+                    Đăng nhập
+                </Button>
+                <div className="pt-3">
+                    Hoặc <Link href="/register">Đăng ký ngay</Link>
+                </div>
+            </Form>
             <GoogleSignInButton />
         </>
-
     );
 }

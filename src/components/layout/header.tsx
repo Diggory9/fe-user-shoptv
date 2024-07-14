@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCart, resetCart } from "@/redux/features/cartSlice";
 import { signOut } from "next-auth/react";
+import CustomDropdown from "../ui/DropDownUser";
 
 export default function Header() {
     const router = useRouter();

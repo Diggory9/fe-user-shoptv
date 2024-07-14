@@ -23,7 +23,7 @@ export default function RootLayout({
                 {/* <React.StrictMode> */}
                 <StoreProvider>
                     <Header />
-                    <main>
+                    <main className="overflow-x-hidden">
                         <AntdRegistry>{children}</AntdRegistry>
                     </main>
                     <Footer />

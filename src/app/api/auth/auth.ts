@@ -13,7 +13,7 @@ const ApiAuth = {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ usernameOrEmail: email, password }),
+                    body: JSON.stringify({ UserNameOrEmail: email, password }),
                 }
             );
             if (!response.ok) {
