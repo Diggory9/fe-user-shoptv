@@ -22,6 +22,8 @@ export const ApiCheckout = {
     },
     async saveOrder(body: any) {
 
+        console.log(process.env.API_URL),
+            console.log(body)
         const response = await fetch(`${process.env.API_URL}/Order/create`, {
             method: 'POST',
             headers: {

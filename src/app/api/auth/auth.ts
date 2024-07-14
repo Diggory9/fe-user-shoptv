@@ -1,4 +1,5 @@
 
+import fetchBaseAuth from "@/app/api/base-api";
 import { rejects } from "assert";
 
 const ApiAuth = {
@@ -12,7 +13,7 @@ const ApiAuth = {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ email, password }),
+                    body: JSON.stringify({ usernameOrEmail: email, password }),
                 }
             );
             if (!response.ok) {
@@ -27,7 +28,7 @@ const ApiAuth = {
     },
     async authLogout({ email }: { email: string }) {
         try {
-            const response = await fetch(
+            const response = await fetchBaseAuth(
                 `${process.env.API_URL}/Account/logout?userEmail=${email}`,
                 {
                     method: "GET",
@@ -91,6 +92,32 @@ const ApiAuth = {
             );
 
             return response;
+
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+    async authExternalLogin({ provider, idToken }: { provider: string, idToken: string }) {
+        try {
+
+            const response = await fetch(
+                `${process.env.API_URL}/Account/ExternalLogin`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        provider, idToken
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            return data;
 
         } catch (error) {
             return Promise.reject(error);

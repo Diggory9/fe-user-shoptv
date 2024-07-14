@@ -6,19 +6,19 @@ const fetchBaseAuth = async (input: RequestInfo, init?: RequestInit): Promise<Re
         let accessToken = localStorage.getItem('accessToken') ? JSON.parse(localStorage.getItem('accessToken') || '') : null;
         const refreshToken = localStorage.getItem('refreshToken') ? JSON.parse(localStorage.getItem('refreshToken') || '') : null;
         const email = localStorage.getItem('email') ? JSON.parse(localStorage.getItem('email') || '') : null;
-        console.log(accessToken)
+
         if (accessToken) {
             const checkAccessTokenExpired = checkIfTokenExpired(accessToken)
-            console.log(checkAccessTokenExpired)
+
             if (checkAccessTokenExpired) {
                 const response = await ApiAuth.authRefresh({ email: email || "", refreshToken: refreshToken || "" });
 
                 const data = response.data;
-                console.log('data', data);
+
                 localStorage.setItem('accessToken', JSON.stringify(data?.jwToken));
                 localStorage.setItem('refreshToken', JSON.stringify(data?.refreshToken));
                 accessToken = data?.jwToken;
-                console.log(accessToken);
+
             }
 
         }
@@ -29,7 +29,6 @@ const fetchBaseAuth = async (input: RequestInfo, init?: RequestInit): Promise<Re
                 'Authorization': `Bearer ${accessToken || ""}`,
             },
         };
-        console.log('uodateinit', updatedInit);
         return fetch(input, updatedInit);
     } catch (error) {
         throw error;

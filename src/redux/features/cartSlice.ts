@@ -56,7 +56,11 @@ const cartSlice = createSlice({
             state.status = 'idle';
         },
         resetCart(state) {
-            state = initialState;
+            state.data = null,
+                state.status = 'idle',
+                state.error = null,
+                state.orderInfo = null,
+                state.statusOrder = 'idle';
         }
     },
     extraReducers: (builder) => {

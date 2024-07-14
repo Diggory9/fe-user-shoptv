@@ -1,11 +1,15 @@
 "use client";
 
+import { externalLogin } from "@/redux/features/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
 
 export function GoogleSignInButton() {
     const handleClick = () => {
         signIn("google");
+
+
     };
 
     return (

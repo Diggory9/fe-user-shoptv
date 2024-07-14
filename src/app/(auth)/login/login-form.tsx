@@ -1,20 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { Toaster, toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { login, resetAuthStatus } from "@/redux/features/authSlice";
+import { externalLogin, login, resetAuthStatus } from "@/redux/features/authSlice";
 import { GoogleSignInButton } from "@/components/ui/auth-button";
 import { getCart } from "@/redux/features/cartSlice";
-import { RESET_AUTH_STATUS } from "@/redux/features/action/actionType";
+import { useSession } from "next-auth/react"
 export default function LoginForm() {
     const dispatch = useAppDispatch();
+    const { data: session, status } = useSession()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
     const params = useSearchParams()
-
-    const { status, isLogin, data } = useAppSelector((state) => state.authCredentials);
+    const [isLoggin, setIsLogin] = useState(false);
+    const auth = useAppSelector((state) => state.authCredentials);
     const handleSubmit = (event: { preventDefault: () => void }) => {
         event.preventDefault();
         try {
@@ -26,16 +27,24 @@ export default function LoginForm() {
     };
     useEffect(() => {
 
-        if (status === 'succeeded' && isLogin) {
+        if (auth.status === 'succeeded' && auth.isLogin) {
             toast.success('Login successful!');
             dispatch(resetAuthStatus());
-            dispatch(getCart({ userId: data?.id || '' }))
+            dispatch(getCart({ userId: auth.data?.id || '' }))
             router.push(params.get("callbackUrl") || "/");
-        } else if (status === 'failed') {
+        } else if (auth.status === 'failed') {
             toast.error(`Tài khoản mật khẩu không chính xác`);
             dispatch(resetAuthStatus());
         }
-    }, [status, isLogin, router, params, data, dispatch]);
+    }, [status, router, params, auth, dispatch]);
+    useEffect(() => {
+        if (status === 'authenticated' && session?.idToken && isLoggin == false) {
+            console.log('Session authenticated with Google');
+            dispatch(externalLogin({ provider: 'google', idToken: session.idToken }));
+            setIsLogin(true);
+            redirect('/');
+        }
+    }, [status, session, dispatch]);
     return (
         <> <form
             className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-16"
