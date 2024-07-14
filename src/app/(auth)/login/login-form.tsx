@@ -38,13 +38,14 @@ export default function LoginForm() {
         }
     }, [status, router, params, auth, dispatch]);
     useEffect(() => {
+        console.log(session)
         if (status === 'authenticated' && session?.idToken && isLoggin == false) {
             console.log('Session authenticated with Google');
-            dispatch(externalLogin({ provider: 'google', idToken: session.idToken }));
+            dispatch(externalLogin({ idToken: session.idToken, provider: 'google' }));
             setIsLogin(true);
-            redirect('/');
+            redirect(params.get("callbackUrl") || "/");
         }
-    }, [status, session, dispatch]);
+    }, [session]);
     return (
         <> <form
             className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-16"
