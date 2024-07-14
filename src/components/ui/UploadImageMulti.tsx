@@ -72,7 +72,7 @@ const MUploadImageMultiple: React.FC<MUploadImageMultipleProps> = (props) => {
             >
                 <Upload
                     name="file"
-                    action={`${process.env.API_URL}UploadPhoto/upload`}
+                    action={`${process.env.API_URL}/UploadPhoto/upload`}
                     listType="picture-card"
                     fileList={fileList}
                     onChange={onChange}

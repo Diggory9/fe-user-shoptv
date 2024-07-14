@@ -10,6 +10,7 @@ import CartDrawer from "@/components/ui/cart-drawer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCart, resetCart } from "@/redux/features/cartSlice";
+import CustomDropdown from "../ui/DropDownUser";
 
 export default function Header() {
     const router = useRouter();
@@ -19,12 +20,10 @@ export default function Header() {
     const cart = useAppSelector((state) => state.cartCredentials);
 
     useEffect(() => {
-
-        if ((auth.isLogin && cart?.status === "idle")) {
+        if (auth.isLogin && cart?.status === "idle") {
             dispatch(getCart({ userId: auth.data?.id || "" }));
-        }
-        else if (auth && auth.data === null) {
-            console.log(',.,,óa')
+        } else if (auth && auth.data === null) {
+            console.log(",.,,óa");
             dispatch(resetCart());
         }
     }, [auth.isLogin, auth.data?.id, cart?.status, dispatch]);
@@ -36,7 +35,6 @@ export default function Header() {
             };
             dispatch(logout(logoutParams));
             toast.success("Đăng xuất thành công!");
-
         } else {
             toast.error("Logout failed");
         }
@@ -130,13 +128,7 @@ export default function Header() {
                     <ul className="flex">
                         {auth?.isLogin ? (
                             <li className="pr-6">
-                                {"Hi, " + auth?.data?.userName}
-                                <button
-                                    onClick={handerLogout}
-                                    className="hover:text-red-500 pl-4 "
-                                >
-                                    Đăng xuất
-                                </button>
+                                <CustomDropdown></CustomDropdown>
                             </li>
                         ) : (
                             <>
@@ -159,7 +151,15 @@ export default function Header() {
                             </>
                         )}
                         <li className="pl-3">
-                            <Badge count={cart?.data?.length || 0} style={{ display: !cart || cart?.data?.length === 0 ? 'none' : 'block' }}>
+                            <Badge
+                                count={cart?.data?.length || 0}
+                                style={{
+                                    display:
+                                        !cart || cart?.data?.length === 0
+                                            ? "none"
+                                            : "block",
+                                }}
+                            >
                                 <Button onClick={showLoading}>
                                     <ShoppingCartOutlined
                                         style={{
@@ -171,7 +171,7 @@ export default function Header() {
 
                             <CartDrawer
                                 open={open}
-                                loading={cart?.status === 'loading'}
+                                loading={cart?.status === "loading"}
                                 setOpen={setOpen}
                             />
                         </li>

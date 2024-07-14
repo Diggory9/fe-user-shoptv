@@ -13,8 +13,9 @@ const CardProduct = ({ product }: CardProductProps) => {
         ? product.price
         : product.price! -
           product.price! * (product.productDiscount.value! / 100);
+    const discountPercentage = product.productDiscount?.value;
     return (
-        <div className="group border-2 border-gray-200 rounded-lg p-4 hover:shadow-lg">
+        <div className="group border-2 border-gray-200 rounded-lg p-4 hover:shadow-lg relative">
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                 {product.image && (
                     <img
@@ -22,6 +23,11 @@ const CardProduct = ({ product }: CardProductProps) => {
                         alt={product.name}
                         className="h-full w-full object-cover object-center"
                     />
+                )}
+                {discountPercentage && (
+                    <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                        -{discountPercentage}%
+                    </span>
                 )}
             </div>
             <p className="mt-4 text-black text-lg font-semibold border-t-2 border-gray-300">
