@@ -95,8 +95,8 @@ export const DetailProduct = ({ data }: { data: any }) => {
                 <div className="lg:flex lg:items-center lg:justify-between">
                     <div className="lg:w-1/2">
                         {product &&
-                            product.productItems &&
-                            product.productItems.length > 0 ? (
+                        product.productItems &&
+                        product.productItems.length > 0 ? (
                             <>
                                 <CImageGallery product={product} />
                             </>
@@ -173,7 +173,7 @@ export const DetailProduct = ({ data }: { data: any }) => {
                                                 quantity >
                                                     (product?.productQuantity
                                                         ? product?.productQuantity -
-                                                        1
+                                                          1
                                                         : 98)
                                                     ? product?.productQuantity
                                                         ? product?.productQuantity
@@ -205,9 +205,8 @@ export const DetailProduct = ({ data }: { data: any }) => {
                         <div dangerouslySetInnerHTML={{ __html: "" }}></div>
                     </div>
                 </div>
-                <div className="flex justify-end">
-                    <div className="w-1/2"></div>
-                    <div className="w-1/2 lg:flex lg:items-center lg:justify-between">
+                <div className="flex ">
+                    <div className="w-full lg:flex lg:items-center lg:justify-between">
                         <ProductTabsProps
                             description={product?.description || ""}
                             productId={data.id}

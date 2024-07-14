@@ -20,11 +20,9 @@ export default function Header() {
     const cart = useAppSelector((state) => state.cartCredentials);
 
     useEffect(() => {
-
-        if ((auth.isLogin && cart?.status === "idle")) {
+        if (auth.isLogin && cart?.status === "idle") {
             dispatch(getCart({ userId: auth.data?.id || "" }));
-        }
-        else if (auth && auth.isLogin === false) {
+        } else if (auth && auth.isLogin === false) {
             dispatch(resetCart());
         }
     }, [auth.isLogin, auth.data?.id, cart?.status, dispatch]);
@@ -39,7 +37,6 @@ export default function Header() {
             signOut(); // Gọi hàm signOut từ hook useGoogleLogout
             dispatch(resetCart());
             toast.success("Đăng xuất thành công!");
-
         } else {
             toast.error("Logout failed");
         }
@@ -133,13 +130,7 @@ export default function Header() {
                     <ul className="flex">
                         {auth?.isLogin ? (
                             <li className="pr-6">
-                                {"Hi, " + auth?.data?.userName}
-                                <button
-                                    onClick={handerLogout}
-                                    className="hover:text-red-500 pl-4 "
-                                >
-                                    Đăng xuất
-                                </button>
+                                <CustomDropdown></CustomDropdown>
                             </li>
                         ) : (
                             <>
@@ -162,7 +153,15 @@ export default function Header() {
                             </>
                         )}
                         <li className="pl-3">
-                            <Badge count={cart?.data?.length || 0} style={{ display: !cart || cart?.data?.length === 0 ? 'none' : 'block' }}>
+                            <Badge
+                                count={cart?.data?.length || 0}
+                                style={{
+                                    display:
+                                        !cart || cart?.data?.length === 0
+                                            ? "none"
+                                            : "block",
+                                }}
+                            >
                                 <Button onClick={showLoading}>
                                     <ShoppingCartOutlined
                                         style={{
@@ -174,7 +173,7 @@ export default function Header() {
 
                             <CartDrawer
                                 open={open}
-                                loading={cart?.status === 'loading'}
+                                loading={cart?.status === "loading"}
                                 setOpen={setOpen}
                             />
                         </li>
