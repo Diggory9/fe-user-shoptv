@@ -12,16 +12,32 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { logout } from "@/redux/features/authSlice";
 import { toast } from "sonner";
+import { signOut } from "next-auth/react";
+import { resetCart } from "@/redux/features/cartSlice";
 const CustomDropdown: React.FC = () => {
     const dispatch = useAppDispatch();
     const { status, error, isLogin, data } = useAppSelector(
         (state) => state.authCredentials
     );
+    const auth = useAppSelector((state) => state.authCredentials);
 
     const handleOnClick = () => {
-        if (isLogin) {
-            dispatch(logout({ email: data?.email || "" }));
-            toast.success("Đăng xuất thành công");
+        // if (isLogin) {
+        //     dispatch(logout({ email: data?.email || "" }));
+        //     toast.success("Đăng xuất thành công");
+        // }
+
+        if (auth.isLogin) {
+            const logoutParams = {
+                email: auth?.data?.email || "",
+            };
+            dispatch(logout(logoutParams));
+
+            signOut(); // Gọi hàm signOut từ hook useGoogleLogout
+            dispatch(resetCart());
+            toast.success("Đăng xuất thành công!");
+        } else {
+            toast.error("Logout failed");
         }
     };
 

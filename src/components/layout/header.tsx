@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { getCart, resetCart } from "@/redux/features/cartSlice";
 import { signOut } from "next-auth/react";
 import CustomDropdown from "../ui/DropDownUser";
+import ApiProduct from "@/app/api/product/product";
 
 export default function Header() {
     const router = useRouter();
@@ -28,20 +29,20 @@ export default function Header() {
         }
     }, [auth.isLogin, auth.data?.id, cart?.status, dispatch]);
 
-    const handerLogout = async () => {
-        if (auth.isLogin) {
-            const logoutParams = {
-                email: auth?.data?.email || "",
-            };
-            dispatch(logout(logoutParams));
+    // const handerLogout = async () => {
+    //     if (auth.isLogin) {
+    //         const logoutParams = {
+    //             email: auth?.data?.email || "",
+    //         };
+    //         dispatch(logout(logoutParams));
 
-            signOut(); // Gọi hàm signOut từ hook useGoogleLogout
-            dispatch(resetCart());
-            toast.success("Đăng xuất thành công!");
-        } else {
-            toast.error("Logout failed");
-        }
-    };
+    //         signOut(); // Gọi hàm signOut từ hook useGoogleLogout
+    //         dispatch(resetCart());
+    //         toast.success("Đăng xuất thành công!");
+    //     } else {
+    //         toast.error("Logout failed");
+    //     }
+    // };
 
     const showLoading = () => {
         if (!auth.isLogin) {
@@ -50,7 +51,9 @@ export default function Header() {
         }
         setOpen(true);
     };
-
+    const onSearch = async (value: string) => {
+        router.push(`/search?query=${value}&offset=1&limit=10`);
+    };
     return (
         <nav className="flex py-5 bg-white shadow-xl border-y-2">
             <Toaster position="top-right" richColors duration={2000} />
@@ -122,6 +125,7 @@ export default function Header() {
                                 placeholder="Tìm kiếm sản phẩm"
                                 allowClear
                                 style={{ width: 220 }}
+                                onSearch={onSearch}
                             />
                         </li>
                     </ul>

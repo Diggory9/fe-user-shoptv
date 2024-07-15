@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function CProduct() {
     const [dataProduct, setDataProduct] = useState<ProductModel[]>([]);
-    const [loading, setLoading] = useState(true);
+
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [showCategory, setShowCategory] = useState(false);
     const [pageSize, setPageSize] = useState(10);
