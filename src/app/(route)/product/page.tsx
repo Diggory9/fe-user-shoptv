@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function CProduct() {
     const [dataProduct, setDataProduct] = useState<ProductModel[]>([]);
-    const [loading, setLoading] = useState(true);
+
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [showCategory, setShowCategory] = useState(false);
     const [pageSize, setPageSize] = useState(10);
@@ -24,7 +24,7 @@ export default function CProduct() {
             .catch((error) => console.error(error));
 
         // console.log("GOOGLE_CLIENT_ID", process.env.GOOGLE_CLIENT_SECRET);
-    }, []);
+    }, [pageNumber, pageSize]);
     const handleOnSelectCategory = (value: string) => {
         if (value === "All") {
             ApiProduct.getProductPublished({
