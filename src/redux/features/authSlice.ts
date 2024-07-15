@@ -51,6 +51,13 @@ const authSlice = createSlice({
             state.isLogin = true;
             state.data = action.payload;
         },
+        removeAuth(state) {
+            state.data = null;
+            state.isLogin = false;
+            state.error = null;
+            state.status = null;
+        }
+
     }, extraReducers(buiders) {
         buiders.addCase(login.fulfilled, (state, action) => {
             state.data = action.payload;
@@ -81,5 +88,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { resetAuthStatus, setAuthData } = authSlice.actions;
+export const { resetAuthStatus, setAuthData, removeAuth } = authSlice.actions;
 export default authSlice.reducer;

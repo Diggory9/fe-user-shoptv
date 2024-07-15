@@ -26,22 +26,8 @@ export default function Header() {
         } else if (auth && auth.isLogin === false) {
             dispatch(resetCart());
         }
-    }, [auth.isLogin, auth.data?.id, cart?.status, dispatch]);
+    }, [auth.isLogin, auth.data?.id, cart?.status]);
 
-    const handerLogout = async () => {
-        if (auth.isLogin) {
-            const logoutParams = {
-                email: auth?.data?.email || "",
-            };
-            dispatch(logout(logoutParams));
-
-            signOut(); // Gọi hàm signOut từ hook useGoogleLogout
-            dispatch(resetCart());
-            toast.success("Đăng xuất thành công!");
-        } else {
-            toast.error("Logout failed");
-        }
-    };
 
     const showLoading = () => {
         if (!auth.isLogin) {
