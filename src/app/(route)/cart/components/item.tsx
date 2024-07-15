@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 
-'use client';
+"use client";
 import InputQuantity from "@/components/ui/input-quantity";
-import { handlePriceBeforeDiscount, numberFormatLocationVietNam } from "@/helpers/helper";
+import {
+    handlePriceBeforeDiscount,
+    numberFormatLocationVietNam,
+} from "@/helpers/helper";
 import { CartModel } from "@/models/cart-model";
 import { addToCart, deleteProductFromCart } from "@/redux/features/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -12,60 +15,68 @@ import { useState, useCallback } from "react";
 import debounce from "lodash/debounce";
 
 export default function CartItem({ cartItem }: { cartItem: CartModel }) {
-
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.authCredentials);
-    const [quantity, setQuantity] = useState<number>(cartItem.quantity);
+    const [quantity, setQuantity] = useState<number>(cartItem.quantity || 0);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const handleDecreaseQuantity = useCallback(debounce(() => {
-        if (quantity > 1) {
-            setQuantity(prev => prev - 1);
+    const handleDecreaseQuantity = useCallback(
+        debounce(() => {
+            if (quantity > 1) {
+                setQuantity((prev) => prev - 1);
+                let payload = {
+                    userId: auth?.data?.id || "",
+                    productItem: cartItem?.id || "",
+                    incr: -1,
+                    quantity: null,
+                };
+                setIsUpdating(true);
+                dispatch(addToCart(payload)).finally(() => {
+                    setIsUpdating(false);
+                });
+            }
+        }, 300),
+        [quantity]
+    );
+
+    const handleIncreaseQuantity = useCallback(
+        debounce(() => {
+            if (quantity < cartItem?.quantityInStock) {
+                setQuantity((prev) => prev + 1);
+                let payload = {
+                    userId: auth?.data?.id || "",
+                    productItem: cartItem?.id || "",
+                    incr: 1,
+                    quantity: null,
+                };
+                setIsUpdating(true);
+                dispatch(addToCart(payload)).finally(() => {
+                    setIsUpdating(false);
+                });
+            }
+        }, 300),
+        [quantity]
+    );
+
+    const handleUpdateQuantity = useCallback(
+        debounce((value: number) => {
+            if (value > cartItem?.quantityInStock || 0 || value < 0) {
+                return;
+            }
+            let quantityAfter = value - quantity;
+            setQuantity(value);
             let payload = {
                 userId: auth?.data?.id || "",
-                productItem: cartItem?.id || '',
-                incr: -1,
-                quantity: null,
+                productItem: cartItem?.id || "",
+                quantity: quantityAfter,
             };
             setIsUpdating(true);
             dispatch(addToCart(payload)).finally(() => {
                 setIsUpdating(false);
             });
-        }
-    }, 300), [quantity]);
-
-    const handleIncreaseQuantity = useCallback(debounce(() => {
-        if (quantity < cartItem?.quantityInStock) {
-            setQuantity(prev => prev + 1);
-            let payload = {
-                userId: auth?.data?.id || "",
-                productItem: cartItem?.id || '',
-                incr: 1,
-                quantity: null,
-            };
-            setIsUpdating(true);
-            dispatch(addToCart(payload)).finally(() => {
-                setIsUpdating(false);
-            });
-        }
-    }, 300), [quantity]);
-
-    const handleUpdateQuantity = useCallback(debounce((value: number) => {
-        if (value > cartItem?.quantityInStock || value < 0) {
-            return;
-        }
-        let quantityAfter = value - quantity;
-        setQuantity(value);
-        let payload = {
-            userId: auth?.data?.id || "",
-            productItem: cartItem?.id || '',
-            quantity: quantityAfter,
-        };
-        setIsUpdating(true);
-        dispatch(addToCart(payload)).finally(() => {
-            setIsUpdating(false);
-        });
-    }, 300), [quantity]);
+        }, 300),
+        [quantity]
+    );
 
     const handleRemoveItem = async (itemId?: string) => {
         try {
@@ -98,16 +109,13 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                         <div className="flex cartItems-center mt-5">
                             <p className="text-sm text-gray-500">
                                 <strong>Màu: </strong>&nbsp;
-                                <span>
-                                    {cartItem.color?.colorName}
-                                </span>
+                                <span>{cartItem.color?.colorName}</span>
                             </p>
                             <div
                                 className="rounded-full border-spacing-1 border-gray-600 w-6 h-6 mx-3"
                                 style={{
                                     backgroundColor:
-                                        cartItem.color
-                                            ?.colorCode ||
+                                        cartItem.color?.colorCode ||
                                         "transparent",
                                 }}
                             ></div>
@@ -116,22 +124,12 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                             <>
                                 <p className="text-lg text-red-700">
                                     {numberFormatLocationVietNam(
-                                        handlePriceBeforeDiscount(
-                                            {
-                                                price:
-                                                    cartItem.price ||
-                                                    0,
-                                                typeDiscout:
-                                                    cartItem
-                                                        .discount
-                                                        .type,
-                                                valueDiscount:
-                                                    cartItem
-                                                        .discount
-                                                        .value ||
-                                                    0,
-                                            }
-                                        )!
+                                        handlePriceBeforeDiscount({
+                                            price: cartItem.price || 0,
+                                            typeDiscout: cartItem.discount.type,
+                                            valueDiscount:
+                                                cartItem.discount.value || 0,
+                                        })!
                                     )}
                                 </p>
                                 <p className="text-base line-through text-gray-700 mt-1">
@@ -149,9 +147,7 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                         )}
                         <p className="text-sm text-gray-500">
                             <strong>Số lượng còn lại: </strong>&nbsp;
-                            <span>
-                                {cartItem.quantityInStock}
-                            </span>
+                            <span>{cartItem.quantityInStock}</span>
                         </p>
                     </div>
                     <div className="ml-5">
@@ -161,7 +157,9 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                             value={quantity}
                             onClickMinus={() => handleDecreaseQuantity()}
                             onClickPlus={() => handleIncreaseQuantity()}
-                            onChange={(value) => handleUpdateQuantity(value as number)}
+                            onChange={(value) =>
+                                handleUpdateQuantity(value as number)
+                            }
                             disabled={isUpdating}
                         />
                     </div>
@@ -174,8 +172,7 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                 >
                     <FontAwesomeIcon icon={faTimes} />
                 </button>
-
             </div>
         </>
     );
-};
+}

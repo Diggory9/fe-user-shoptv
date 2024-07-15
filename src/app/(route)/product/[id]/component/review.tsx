@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import ApiReview from "@/app/api/review/review";
-import { formattedDateTime } from "@/helpers/helper";
+import { formatDate, formattedDateTime } from "@/helpers/helper";
 import { ReviewModel } from "@/models/review-model";
 import { Rate } from "antd";
 import { useEffect, useState } from "react";
@@ -40,10 +40,22 @@ export default function Review({ productId }: { productId: string }) {
                     <>
                         <div className="flex justify-between mb-4 border-b-2 border-spacing-1 border-gray-400 py-4">
                             <p className="text-gray-600 w-1/2">
-                                <span className="font-semibold text-lg">Tổng số đánh giá: </span>&nbsp;<span className="text-lg">{data?.totalCount}</span>
+                                <span className="font-semibold text-lg">
+                                    Tổng số đánh giá:{" "}
+                                </span>
+                                &nbsp;
+                                <span className="text-lg">
+                                    {data?.totalCount}
+                                </span>
                             </p>
                             <div className="text-gray-600">
-                                <span className="font-semibold text-lg">Đánh giá trung bình: </span>&nbsp;<span className="text-lg">{data?.averageRating}</span>
+                                <span className="font-semibold text-lg">
+                                    Đánh giá trung bình:{" "}
+                                </span>
+                                &nbsp;
+                                <span className="text-lg">
+                                    {data?.averageRating}
+                                </span>
                                 <Rate
                                     className="mt-3"
                                     allowHalf
@@ -53,36 +65,47 @@ export default function Review({ productId }: { productId: string }) {
                             </div>
                         </div>
 
-                        {
-                            data?.data.map((item) => (
-                                <div className="list-none mb-0" key={item.id}>
-                                    <div className="py-4 border-b border-gray-200">
-                                        <div className="text-gray-600">
-                                            <p className="text-sm mb-4 flex justify-between">
-                                                <span> Đánh giá bởi {item.userName} vào: </span> <span>{formattedDateTime(new Date(item.createAt))}</span>
-                                            </p>
-                                            <Rate
-                                                allowHalf
-                                                disabled
-                                                defaultValue={item.rating}
-                                            />
-                                            <p>{item.content}</p>
-                                            <div className="flex">
-                                                {item?.reviewImages?.map(
-                                                    (image, index) => (
-                                                        <img key={index}
-                                                            src={image.url}
-                                                            alt="Image"
-                                                            className="w-20 h-20 rounded-full mr-2"
-                                                        />
-                                                    )
+                        {data?.data.map((item) => (
+                            <div className="list-none mb-0" key={item.id}>
+                                <div className="py-4 border-b border-gray-200">
+                                    <div className="text-gray-600">
+                                        <p className="text-sm mb-4 flex justify-between">
+                                            <span>
+                                                {" "}
+                                                Đánh giá bởi{" "}
+                                                <span className="font-bold">
+                                                    {item.userName}
+                                                </span>{" "}
+                                                vào ngày{" "}
+                                            </span>{" "}
+                                            <span>
+                                                {formatDate(
+                                                    new Date(item.createAt)
                                                 )}
-                                            </div>
+                                            </span>
+                                        </p>
+                                        <Rate
+                                            allowHalf
+                                            disabled
+                                            defaultValue={item.rating}
+                                        />
+                                        <p>{item.content}</p>
+                                        <div className="flex">
+                                            {item?.reviewImages?.map(
+                                                (image, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={image.url}
+                                                        alt="Image"
+                                                        className="w-20 h-20 rounded-full mr-2"
+                                                    />
+                                                )
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                            ))
-                        }
+                            </div>
+                        ))}
                     </>
                 )}
             </div>

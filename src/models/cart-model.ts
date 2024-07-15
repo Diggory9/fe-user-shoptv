@@ -9,9 +9,8 @@ export interface CartModel {
     name?: string,
     discount?: { type?: string, value?: number },
     price?: number,
-    quantity?: number,
-    quantityInStock?: number,
-
+    quantity: number,
+    quantityInStock: number,
 }
 export interface ImageModel {
     id?: string,
