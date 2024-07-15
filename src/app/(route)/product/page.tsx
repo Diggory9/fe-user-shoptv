@@ -24,7 +24,7 @@ export default function CProduct() {
             .catch((error) => console.error(error));
 
         // console.log("GOOGLE_CLIENT_ID", process.env.GOOGLE_CLIENT_SECRET);
-    }, []);
+    }, [pageNumber, pageSize]);
     const handleOnSelectCategory = (value: string) => {
         if (value === "All") {
             ApiProduct.getProductPublished({

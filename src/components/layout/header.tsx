@@ -10,9 +10,7 @@ import CartDrawer from "@/components/ui/cart-drawer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCart, resetCart } from "@/redux/features/cartSlice";
-import { signOut } from "next-auth/react";
 import CustomDropdown from "../ui/DropDownUser";
-import ApiProduct from "@/app/api/product/product";
 
 export default function Header() {
     const router = useRouter();
@@ -27,7 +25,7 @@ export default function Header() {
         } else if (auth && auth.isLogin === false) {
             dispatch(resetCart());
         }
-    }, [auth.isLogin, auth.data?.id, cart?.status, dispatch]);
+    }, [auth, cart?.status, dispatch]);
 
     // const handerLogout = async () => {
     //     if (auth.isLogin) {

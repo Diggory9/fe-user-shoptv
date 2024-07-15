@@ -22,7 +22,7 @@ export default function Search() {
             .catch((error) => console.error(error));
 
         // console.log("GOOGLE_CLIENT_ID", process.env.GOOGLE_CLIENT_SECRET);
-    }, []);
+    }, [pageNumber, pageSize]);
     useEffect(() => {
         ApiProduct.queryProduct({
             query: searchParams.get("query") || "",
