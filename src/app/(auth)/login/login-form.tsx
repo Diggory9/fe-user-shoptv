@@ -61,7 +61,7 @@ export default function LoginForm() {
             setIsLogin(true);
             redirect(params.get("callbackUrl") || "/");
         }
-    }, [session]);
+    }, [session, isLoggin]);
     return (
         <>
             <Form
