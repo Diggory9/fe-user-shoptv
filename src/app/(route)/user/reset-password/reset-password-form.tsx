@@ -4,6 +4,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { error } from "console";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -15,6 +16,7 @@ export interface ResetPasswordModel {
 }
 
 export default function ResetPasswordForm() {
+    const router = useRouter();
     const [form] = Form.useForm();
     const auth = useAppSelector((state) => state.authCredentials);
     console.log(auth.data);
@@ -30,6 +32,7 @@ export default function ResetPasswordForm() {
             .then((res) => {
                 if (res?.ok) {
                     toast.success("Thay đổi thành công");
+                    router.push("/user/profile");
                 } else {
                     toast.error("Thay đổi thất bại");
                 }

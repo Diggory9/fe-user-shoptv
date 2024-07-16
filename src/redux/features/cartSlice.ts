@@ -35,7 +35,7 @@ export const paymentVnpay = createAsyncThunk('cart/fetchPayment', async ({ txnRe
         throw new Error('Network response was not ok');
     }
     const data = await response.json();
-    return data as OrderInfo;
+    return data.data as OrderInfo;
 });
 
 export const addToCart = createAsyncThunk('cart/addToCart', async ({ userId, productItem, incr, quantity }: { userId: string | null, productItem: string, incr?: number, quantity: number | null }) => {
