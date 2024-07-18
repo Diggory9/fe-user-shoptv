@@ -23,7 +23,6 @@ export default function CartPageComponent() {
 
     // dưa vào item
 
-
     const totalPrice = cart?.data?.reduce((total, item) => {
         let priceBeforeDiscount = handlePriceBeforeDiscount({
             price: item.price || 0,
@@ -33,14 +32,11 @@ export default function CartPageComponent() {
         return total + priceBeforeDiscount * (item.quantity || 1);
     }, 0);
 
-
     const handleContinueShopping = () => {
         redirect("/product");
     };
 
     return (
-
-
         <div className="container mx-auto px-4 py-8 bg-white">
             <Badge
                 offset={[20, 0]}
@@ -59,7 +55,6 @@ export default function CartPageComponent() {
                         <CartItems cartItems={cart.data || []} />
                     </div>
                     <SummaryCartOrder totalPrice={totalPrice || 0} />
-
                 </div>
             )}
             <Button
@@ -70,6 +65,5 @@ export default function CartPageComponent() {
                 <FontAwesomeIcon icon={faArrowLeft} /> &nbsp; Tiếp tục mua sắm
             </Button>
         </div>
-
     );
-};
+}

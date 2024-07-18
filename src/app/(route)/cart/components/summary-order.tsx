@@ -2,10 +2,10 @@
 import { numberFormatLocationVietNam } from "@/helpers/helper";
 import { Button } from "antd";
 import { useRouter } from "next/navigation";
-export default function SummaryCartOrder({ totalPrice }: { totalPrice: number }) {
-    const router = useRouter()
-    const handleCheckout = () => {
-        router.push('/checkout');
+// export default function SummaryCartOrder({ totalPrice }: { totalPrice: number }) {
+//     const router = useRouter()
+//     const handleCheckout = () => {
+//         router.push('/checkout');
 
 export default function SummaryCartOrder({
     totalPrice,
