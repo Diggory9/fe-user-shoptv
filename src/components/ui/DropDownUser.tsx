@@ -14,8 +14,7 @@ import { logout } from "@/redux/features/authSlice";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
 import { resetCart } from "@/redux/features/cartSlice";
-import { signOut } from "next-auth/react";
-import { resetCart } from "@/redux/features/cartSlice";
+
 const CustomDropdown: React.FC = () => {
     const dispatch = useAppDispatch();
     const { status, error, isLogin, data } = useAppSelector(
