@@ -7,13 +7,16 @@ import {
     externalLogin,
     login,
     resetAuthStatus,
+    setAuthData,
 } from "@/redux/features/authSlice";
 import { GoogleSignInButton } from "@/components/ui/auth-button";
-import { getCart } from "@/redux/features/cartSlice";
 import { useSession } from "next-auth/react";
 import { Button, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import ApiAuth from "@/app/api/auth/auth";
+import ApiCart from "@/app/api/cart/cart";
+import { setDataCart } from "@/redux/features/cartSlice";
 export default function LoginForm() {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
@@ -26,42 +29,22 @@ export default function LoginForm() {
         console.log(value);
 
         try {
-            dispatch(
-                login({
-                    email: value.userNameOrEmail,
-                    password: value?.password,
+            ApiAuth.authLogin({ email: value.userNameOrEmail, password: value.password }).then((data) => {
+                dispatch(setAuthData(data.data));
+                console.log(data.data)
+                ApiCart.getCartByUser(data.data.id).then((data) => {
+                    console.log(data)
+                    dispatch(setDataCart(data.data));
+                    toast.success("Login successful!");
+
+                    router.push(params.get("callbackUrl") || "/");
                 })
-            );
+            })
         } catch (error) {
             console.error("Error during fetch:", error);
         }
     };
-    useEffect(() => {
-        if (auth.status === "succeeded" && auth.isLogin) {
-            toast.success("Login successful!");
-            dispatch(resetAuthStatus());
-            dispatch(getCart({ userId: auth.data?.id || "" }));
-            router.push(params.get("callbackUrl") || "/");
-        } else if (auth.status === "failed") {
-            toast.error(`Tài khoản mật khẩu không chính xác`);
-            dispatch(resetAuthStatus());
-        }
-    }, [status, router, params, auth, dispatch]);
-    useEffect(() => {
-        console.log(session);
-        if (
-            status === "authenticated" &&
-            session?.idToken &&
-            isLoggin == false
-        ) {
-            console.log("Session authenticated with Google");
-            dispatch(
-                externalLogin({ idToken: session.idToken, provider: "google" })
-            );
-            setIsLogin(true);
-            redirect(params.get("callbackUrl") || "/");
-        }
-    }, [session, isLoggin]);
+
     return (
         <>
             <Form

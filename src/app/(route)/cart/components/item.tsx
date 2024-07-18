@@ -7,87 +7,65 @@ import {
     numberFormatLocationVietNam,
 } from "@/helpers/helper";
 import { CartModel } from "@/models/cart-model";
-import { addToCart, deleteProductFromCart } from "@/redux/features/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useCallback } from "react";
 import debounce from "lodash/debounce";
+import ApiCart from "@/app/api/cart/cart";
+import { setDataCart } from "@/redux/features/cartSlice";
+import { toast } from "sonner";
 
 export default function CartItem({ cartItem }: { cartItem: CartModel }) {
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.authCredentials);
-    const [quantity, setQuantity] = useState<number>(cartItem.quantity || 0);
-    const [isUpdating, setIsUpdating] = useState(false);
 
-    const handleDecreaseQuantity = useCallback(
-        debounce(() => {
-            if (quantity > 1) {
-                setQuantity((prev) => prev - 1);
-                let payload = {
-                    userId: auth?.data?.id || "",
-                    productItem: cartItem?.id || "",
-                    incr: -1,
-                    quantity: null,
-                };
-                setIsUpdating(true);
-                dispatch(addToCart(payload)).finally(() => {
-                    setIsUpdating(false);
-                });
-            }
-        }, 300),
-        [quantity]
-    );
+    const [quantity, setQuantity] = useState<number>(cartItem.quantity);
 
-    const handleIncreaseQuantity = useCallback(
-        debounce(() => {
-            if (quantity < cartItem?.quantityInStock) {
-                setQuantity((prev) => prev + 1);
-                let payload = {
-                    userId: auth?.data?.id || "",
-                    productItem: cartItem?.id || "",
-                    incr: 1,
-                    quantity: null,
-                };
-                setIsUpdating(true);
-                dispatch(addToCart(payload)).finally(() => {
-                    setIsUpdating(false);
-                });
-            }
-        }, 300),
-        [quantity]
-    );
+    const handleQuantityChange = useCallback(debounce((newQuantity) => {
 
-    const handleUpdateQuantity = useCallback(
-        debounce((value: number) => {
-            if (value > cartItem?.quantityInStock || 0 || value < 0) {
-                return;
-            }
-            let quantityAfter = value - quantity;
-            setQuantity(value);
-            let payload = {
-                userId: auth?.data?.id || "",
-                productItem: cartItem?.id || "",
-                quantity: quantityAfter,
-            };
-            setIsUpdating(true);
-            dispatch(addToCart(payload)).finally(() => {
-                setIsUpdating(false);
-            });
-        }, 300),
-        [quantity]
-    );
+        ApiCart.addProductToCart(auth?.data?.id || '', cartItem?.id || '', null, newQuantity).then((data) => {
+            dispatch(setDataCart(data.data));
 
+        }).catch(() => {
+            toast.error("Cập nhật sản phẩm thất bại");
+        });
+    }, 1000), []);
+
+    const handleDecreaseQuantity = () => {
+        if (quantity > 1) {
+            const newQuantity = quantity - 1;
+            setQuantity(newQuantity);
+            handleQuantityChange(newQuantity);
+        }
+    };
+
+    const handleIncreaseQuantity = () => {
+        if (quantity < cartItem?.quantityInStock) {
+            const newQuantity = quantity + 1;
+            setQuantity(newQuantity);
+            handleQuantityChange(newQuantity);
+        }
+    };
+
+    const handleUpdateQuantity = (value: number) => {
+        if (value > cartItem?.quantityInStock || value < 0) {
+            return;
+        }
+        const quantityChange = value - quantity;
+        console.log(quantityChange)
+        setQuantity(value);
+        handleQuantityChange(quantityChange);
+    };
     const handleRemoveItem = async (itemId?: string) => {
         try {
-            dispatch(
-                deleteProductFromCart({
-                    userId: auth?.data?.id || "",
-                    productItemId: itemId || "",
-                })
-            );
+            ApiCart.deleteProductToCart({ userId: auth.data?.id || '', productItemId: itemId || '' }).then((data) => {
+                dispatch(setDataCart(data.data));
+            }).catch(() => {
+                toast.error("Xóa sản phẩm thất bại");
+            });
         } catch (error) {
-            console.error("Failed to remove item from cart:", error);
+            toast.error("Có lỗi xảy ra");
         }
     };
 
@@ -114,9 +92,9 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                             <div
                                 className="rounded-full border-spacing-1 border-gray-600 w-6 h-6 mx-3"
                                 style={{
-                                    backgroundColor:
-                                        cartItem.color?.colorCode ||
-                                        "transparent",
+
+                                    backgroundColor: cartItem.color?.colorCode || "transparent",
+
                                 }}
                             ></div>
                         </div>
@@ -127,22 +105,19 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                                         handlePriceBeforeDiscount({
                                             price: cartItem.price || 0,
                                             typeDiscout: cartItem.discount.type,
-                                            valueDiscount:
-                                                cartItem.discount.value || 0,
+
+                                            valueDiscount: cartItem.discount.value || 0,
+
                                         })!
                                     )}
                                 </p>
                                 <p className="text-base line-through text-gray-700 mt-1">
-                                    {numberFormatLocationVietNam(
-                                        cartItem.price || 0
-                                    )}
+                                    {numberFormatLocationVietNam(cartItem.price || 0)}
                                 </p>
                             </>
                         ) : (
                             <p className="text-lg text-black mt-3">
-                                {numberFormatLocationVietNam(
-                                    cartItem.price || 0
-                                )}
+                                {numberFormatLocationVietNam(cartItem.price || 0)}
                             </p>
                         )}
                         <p className="text-sm text-gray-500">
@@ -155,12 +130,12 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                             className="w-full"
                             max={cartItem.quantityInStock || 1}
                             value={quantity}
-                            onClickMinus={() => handleDecreaseQuantity()}
-                            onClickPlus={() => handleIncreaseQuantity()}
-                            onChange={(value) =>
-                                handleUpdateQuantity(value as number)
-                            }
-                            disabled={isUpdating}
+
+                            onClickMinus={handleDecreaseQuantity}
+                            onClickPlus={handleIncreaseQuantity}
+                            onChange={(value) => handleUpdateQuantity(value as number)}
+
+
                         />
                     </div>
                 </div>

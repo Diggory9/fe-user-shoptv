@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { numberFormatLocationVietNam } from "@/helpers/helper";
-import { getCart } from "@/redux/features/cartSlice";
+import { resetCart } from "@/redux/features/cartSlice";
 
 export default function CheckOutPage() {
     const [dataProvince, setDataProvince] = useState<ProvinceModel[]>([]);
@@ -70,7 +70,7 @@ export default function CheckOutPage() {
             .then((res) => {
                 setDataWard(res.data);
             })
-            .catch((err) => {});
+            .catch((err) => { });
     };
     const provinceOptions = dataProvince?.map((item) => ({
         value: item?.ProvinceID,
@@ -136,7 +136,7 @@ export default function CheckOutPage() {
                             "dataOrder",
                             JSON.stringify(dataOrder)
                         );
-                        dispatch(getCart({ userId: auth.data?.id || "" }));
+                        dispatch(resetCart())
                         router.push("/checkout/result");
                     } else {
                         toast.error(
@@ -156,8 +156,11 @@ export default function CheckOutPage() {
                     })
                     .catch((error) => {
                         console.log(error);
+                        toast.error(
+                            "Đơn đặt hàng không thành công xin thử lại sau ít phút"
+                        );
                     });
-            } catch (error) {}
+            } catch (error) { }
         }
     };
 
@@ -382,13 +385,13 @@ export default function CheckOutPage() {
                                                     </p>
                                                     {item.amountDiscount !==
                                                         0 && (
-                                                        <p className="text-red-600">
-                                                            Giảm giá:{" "}
-                                                            {numberFormatLocationVietNam(
-                                                                item.amountDiscount
-                                                            )}
-                                                        </p>
-                                                    )}
+                                                            <p className="text-red-600">
+                                                                Giảm giá:{" "}
+                                                                {numberFormatLocationVietNam(
+                                                                    item.amountDiscount
+                                                                )}
+                                                            </p>
+                                                        )}
                                                     <p className="text-gray-600">
                                                         Giá:{" "}
                                                         {numberFormatLocationVietNam(

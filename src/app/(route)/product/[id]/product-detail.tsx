@@ -1,11 +1,13 @@
 "use client";
 
 import ProductTabsProps from "@/app/(route)/product/[id]/component/tabprop";
+import ApiCart from "@/app/api/cart/cart";
+import ApiProduct from "@/app/api/product/product";
 import CImageGallery from "@/components/ui/image-gallery";
 import InputQuantity from "@/components/ui/input-quantity";
 import { numberFormatLocationVietNam } from "@/helpers/helper";
 import { ProductModel } from "@/models/product-model";
-import { addToCart, resetCartStatus } from "@/redux/features/cartSlice";
+import { setDataCart } from "@/redux/features/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Button } from "antd";
 import { usePathname } from "next/navigation";
@@ -13,23 +15,28 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export const DetailProduct = ({ data }: { data: any }) => {
+export const DetailProduct = ({ id }: { id: string }) => {
     const dispatch = useAppDispatch();
     const pathname = usePathname();
 
     const [product, setProduct] = useState<ProductModel | null>(null);
-    const [productItemId, setProductItemId] = useState(data.productItems[0].id);
+    const [productItemId, setProductItemId] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number>(1);
     const router = useRouter();
-    const cart = useAppSelector((state) => state.cartCredentials);
     const auth = useAppSelector((state) => state.authCredentials);
     useEffect(() => {
-        const productBeforeItemSelected = updateProductItemSelected(
-            data,
-            productItemId
-        );
-        setProduct(productBeforeItemSelected!);
-    }, [data, productItemId, cart]);
+        ApiProduct.getDetailProducts(id).then((res) => {
+            setProduct(res.data);
+            setProductItemId(res.data.productItems[0].id)
+            const productBeforeItemSelected = updateProductItemSelected(
+                res.data,
+                res.data.productItems[0].id
+            );
+            setProduct(productBeforeItemSelected!);
+        })
+
+
+    }, [id]);
 
     const updateProductItemSelected = (
         product: ProductModel,
@@ -55,7 +62,7 @@ export const DetailProduct = ({ data }: { data: any }) => {
             productItemId
         );
         setProduct(productBeforeItemSelected!);
-        setProductItemId(productItemId!);
+        setProductItemId(productItemId);
         console.log(productItemId);
     };
 
@@ -66,12 +73,12 @@ export const DetailProduct = ({ data }: { data: any }) => {
             router.push(`/login?callbackUrl=${pathname}`);
         } else {
             try {
-                let payload = {
-                    userId: auth.data?.id || "",
-                    productItem: productItemId,
-                    quantity: quantity,
-                };
-                dispatch(addToCart(payload));
+                ApiCart.addProductToCart(auth?.data?.id || '', productItemId || '', null, quantity).then((data) => {
+                    dispatch(setDataCart(data.data));
+                    toast.success(
+                        "Thêm vào giỏ hàng thành công"
+                    );
+                })
             } catch (error) {
                 toast.error(
                     "Thêm vào giỏ hàng thất bại xin thử lại sau ít phút"
@@ -79,12 +86,7 @@ export const DetailProduct = ({ data }: { data: any }) => {
             }
         }
     };
-    useEffect(() => {
-        if (cart.status === "addSuccessed") {
-            toast.success("Thêm sản phẩm vào giỏ hàng thành công");
-            dispatch(resetCartStatus());
-        }
-    }, [cart?.status, dispatch]);
+
 
     const selectedProductItem = product?.productItems?.find(
         (item) => item.selected
@@ -95,8 +97,8 @@ export const DetailProduct = ({ data }: { data: any }) => {
                 <div className="lg:flex lg:items-center lg:justify-between">
                     <div className="lg:w-1/2">
                         {product &&
-                        product.productItems &&
-                        product.productItems.length > 0 ? (
+                            product.productItems &&
+                            product.productItems.length > 0 ? (
                             <>
                                 <CImageGallery product={product} />
                             </>
@@ -161,7 +163,7 @@ export const DetailProduct = ({ data }: { data: any }) => {
                                 <div className="w-[120px]">
                                     <InputQuantity
                                         className="w-full"
-                                        max={product?.productQuantity || 99}
+                                        max={selectedProductItem?.quantity || 99}
                                         value={quantity}
                                         onClickMinus={() =>
                                             setQuantity(
@@ -173,7 +175,7 @@ export const DetailProduct = ({ data }: { data: any }) => {
                                                 quantity >
                                                     (product?.productQuantity
                                                         ? product?.productQuantity -
-                                                          1
+                                                        1
                                                         : 98)
                                                     ? product?.productQuantity
                                                         ? product?.productQuantity
@@ -209,7 +211,7 @@ export const DetailProduct = ({ data }: { data: any }) => {
                     <div className="w-full lg:flex lg:items-center lg:justify-between">
                         <ProductTabsProps
                             description={product?.description || ""}
-                            productId={data.id}
+                            productId={product?.id || ''}
                         />
                     </div>
                 </div>

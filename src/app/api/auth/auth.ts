@@ -1,6 +1,6 @@
 
-import fetchBaseAuth from "@/app/api/base-api";
-import { rejects } from "assert";
+import { fetchClient } from "@/app/api/fetchClient";
+
 
 const ApiAuth = {
 
@@ -28,26 +28,27 @@ const ApiAuth = {
     },
     async authLogout({ email }: { email: string }) {
         try {
-            const response = await fetchBaseAuth(
-                `${process.env.API_URL}/Account/logout?userEmail=${email}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const data = await response.json();
-            return data;
+            // const response = await fetchBaseAuth(
+            //     `${process.env.API_URL}/Account/logout?userEmail=${email}`,
+            //     {
+            //         method: "GET",
+            //         headers: {
+            //             "Content-Type": "application/json",
+            //         }
+            //     }
+            // );
+            // if (!response.ok) {
+            //     throw new Error("Network response was not ok");
+            // }
+            // const data = await response.json();
+            const res = await fetchClient({ method: "POST", param: `Account/logout?userEmail=${email}`, body: {} })
+            return res;
         }
         catch (error) {
             console.error("Fetch error:", error);
         }
     }
-    , async authRefresh({ email, refreshToken }: { email: string, refreshToken: string }) {
+    , async authRefresh({ email, refreshToken }: { email?: string, refreshToken?: string }) {
         try {
             const body = {
                 email,
