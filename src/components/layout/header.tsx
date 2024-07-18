@@ -1,34 +1,20 @@
 "use client";
 import Link from "next/link";
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 import Search from "antd/es/input/Search";
-import { toast, Toaster } from "sonner";
-import { logout } from "@/redux/features/authSlice";
+import { Toaster } from "sonner";
 import { Badge, Button } from "antd";
 import CartDrawer from "@/components/ui/cart-drawer";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getCart, resetCart } from "@/redux/features/cartSlice";
-import { signOut } from "next-auth/react";
 import CustomDropdown from "../ui/DropDownUser";
 
 export default function Header() {
     const router = useRouter();
     const [open, setOpen] = useState<boolean>(false);
-    const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.authCredentials);
     const cart = useAppSelector((state) => state.cartCredentials);
-
-    useEffect(() => {
-        if (auth.isLogin && cart?.status === "idle") {
-            dispatch(getCart({ userId: auth.data?.id || "" }));
-        } else if (auth && auth.isLogin === false) {
-            dispatch(resetCart());
-        }
-    }, [auth.isLogin, auth.data?.id, cart?.status]);
-
-
     const showLoading = () => {
         if (!auth.isLogin) {
             router.push(`/login`);

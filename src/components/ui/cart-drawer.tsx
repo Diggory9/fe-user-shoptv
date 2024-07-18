@@ -6,9 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
-import { deleteProductFromCart, resetCartStatus } from "@/redux/features/cartSlice";
 import { toast } from "sonner";
 import { handlePriceBeforeDiscount, numberFormatLocationVietNam } from "@/helpers/helper";
+import ApiCart from "@/app/api/cart/cart";
+import { setDataCart } from "@/redux/features/cartSlice";
 type CartDrawerProps = {
     open: boolean;
     loading?: boolean;
@@ -21,8 +22,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
     loading = false,
     setOpen,
 }) => {
-    const cart = useAppSelector((state) => state.cartCredentials);
     const auth = useAppSelector((state) => state.authCredentials);
+    const cart = useAppSelector((state) => state.cartCredentials);
     const dispatch = useAppDispatch();
 
     // tính tiền giảm giá
@@ -38,22 +39,14 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
 
     const handleRemoveItem = (id: string) => {
         if (cart?.data) {
-            dispatch(
-                deleteProductFromCart({
-                    userId: auth.data?.id || "",
-                    productItemId: id,
-                })
-            );
+            ApiCart.deleteProductToCart({ userId: auth.data?.id || '', productItemId: id }).then((data) => {
+                dispatch(setDataCart(data.data));
+                toast.success("Xóa sản phẩm thành công");
+            }).catch((error) => {
+                toast.success("Xóa sản phẩm thất bại");
+            });
         }
     };
-    useEffect(() => {
-        if (cart?.status === "deleteSuccessed") {
-            toast.success("Xóa sản phẩm khỏi giỏ hàng thành công");
-            dispatch(resetCartStatus());
-        }
-    }, [cart?.status, dispatch]);
-
-
     return (
         <Drawer
             closable

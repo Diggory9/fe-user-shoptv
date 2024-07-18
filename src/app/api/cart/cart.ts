@@ -1,87 +1,43 @@
-import fetchBaseAuth from "@/app/api/base-api";
-
+// ApiCart.ts
+import { fetchClient } from "@/app/api/fetchClient";
 
 const ApiCart = {
     async getCartByUser(userId: string) {
-        console.log(userId);
         try {
-            const response = await fetchBaseAuth(
-                `${process.env.API_URL}/Cart/get-cart/${userId}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*"
-                    },
-                }
-            );
-            console.log(response);
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const data = await response.json();
-            return data;
+            const res = await fetchClient({ method: "POST", param: `Cart/get-cart/${userId}`, body: {} });
+            return res;
         } catch (error) {
             console.error("Fetch error: ", error);
-            throw error;
+            throw error; // Throw error to handle in calling function
         }
     },
-    async addProductToCart(UserId: string | null, productItemId: string, incr: number | null = null, quantity: number | null = null) {
+
+    async addProductToCart(userId: string | null, productItemId: string, incr: number | null = null, quantity: number | null = null) {
         try {
             let body = {
-                userId: UserId,
+                userId: userId,
                 productItemId: productItemId,
                 ...(quantity !== null && { quantity: quantity }),
                 ...(incr !== null && { incrementBy: incr })
-            }
+            };
 
-            const response = await fetchBaseAuth(
-                `${process.env.API_URL}/Cart/add-to-cart`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(body)
-                }
-            );
-
-            const data = await response.json();
-            console.log("res", data);
-
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            return data;
+            const res = await fetchClient({ method: "POST", param: `Cart/add-to-cart`, body });
+            return res;
         } catch (error) {
             console.error("Fetch error: ", error);
-            throw error;
+            throw error; // Throw error to handle in calling function
         }
     },
+
     async deleteProductToCart({ userId, productItemId }: { userId: string, productItemId: string }) {
         try {
-            const response = await fetchBaseAuth(
-                `${process.env.API_URL}/Cart/${userId}/item/${productItemId}`,
-                {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const data = await response.json();
-            return data;
+            const res = await fetchClient({ method: "DELETE", param: `Cart/${userId}/item/${productItemId}`, body: {} });
+            return res;
         } catch (error) {
             console.error("Fetch error: ", error);
-            throw error;
+            throw error; // Throw error to handle in calling function
         }
     }
+};
 
-}
-
-
-export default ApiCart
+export default ApiCart;

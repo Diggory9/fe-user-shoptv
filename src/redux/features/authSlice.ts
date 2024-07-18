@@ -7,6 +7,7 @@ interface UserState {
     data: AuthModel | null;
     error: string | null;
     status?: 'loading' | 'succeeded' | 'failed' | null;
+
 }
 
 const initialState: UserState = {
@@ -18,10 +19,6 @@ const initialState: UserState = {
 export const login = createAsyncThunk('user/login', async ({ email, password }: { email?: string, password?: string }) => {
     const response = await ApiAuth.authLogin({ email, password });
     const data = response.data;
-    const { jwToken, refreshToken } = data;
-    localStorage.setItem('accessToken', JSON.stringify(jwToken));
-    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
-    localStorage.setItem('email', JSON.stringify(email));
     return data;
 });
 export const externalLogin = createAsyncThunk('user/externalLogin', async ({ provider, idToken }: { provider: string, idToken: string }) => {
@@ -29,16 +26,10 @@ export const externalLogin = createAsyncThunk('user/externalLogin', async ({ pro
     const data = response.data;
     const { jwToken, refreshToken, email } = data;
     console.log(data);
-    localStorage.setItem('accessToken', JSON.stringify(jwToken));
-    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
-    localStorage.setItem('email', JSON.stringify(email));
     return data;
 });
 export const logout = createAsyncThunk('user/logout', async ({ email }: { email: string }) => {
     await ApiAuth.authLogout({ email })
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('email');
 });
 const authSlice = createSlice({
     name: 'auth',

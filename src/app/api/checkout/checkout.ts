@@ -60,17 +60,26 @@ export const ApiCheckout = {
         }
     },
     async createOrderVnpay(txnRef: string) {
-        const response = await fetch(
-            `${process.env.API_URL}/Payment/create-order/${txnRef}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            }
-        );
-        return response;
+        try {
 
+            const response = await fetch(
+                `${process.env.API_URL}/Payment/create-order/${txnRef}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`Create order failed`);
+            }
+            return response.json();
+        }
+        catch (error) {
+
+            throw new Error(`Create order failed`);
+        }
 
     }
 }
