@@ -14,11 +14,14 @@ import { logout } from "@/redux/features/authSlice";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
 import { resetCart } from "@/redux/features/cartSlice";
+import { signOut } from "next-auth/react";
+import { resetCart } from "@/redux/features/cartSlice";
 const CustomDropdown: React.FC = () => {
     const dispatch = useAppDispatch();
     const { status, error, isLogin, data } = useAppSelector(
         (state) => state.authCredentials
     );
+    const auth = useAppSelector((state) => state.authCredentials);
 
     const handleOnClick = () => {
         if (isLogin) {
@@ -30,15 +33,11 @@ const CustomDropdown: React.FC = () => {
                     dispatch(resetCart());
                     toast.success("Đăng xuất thành công!");
                 }); // Gọi hàm signOut từ hook useGoogleLogout
-
             });
-
-
         } else {
             toast.error("Logout failed");
         }
     };
-
 
     const items: MenuProps["items"] = [
         {

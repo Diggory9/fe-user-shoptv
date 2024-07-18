@@ -8,6 +8,7 @@ import { Badge, Button } from "antd";
 import CartDrawer from "@/components/ui/cart-drawer";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
 import CustomDropdown from "../ui/DropDownUser";
 
 export default function Header() {
@@ -15,6 +16,7 @@ export default function Header() {
     const [open, setOpen] = useState<boolean>(false);
     const auth = useAppSelector((state) => state.authCredentials);
     const cart = useAppSelector((state) => state.cartCredentials);
+
     const showLoading = () => {
         if (!auth.isLogin) {
             router.push(`/login`);
@@ -22,7 +24,9 @@ export default function Header() {
         }
         setOpen(true);
     };
-
+    const onSearch = async (value: string) => {
+        router.push(`/search?query=${value}&offset=1&limit=10`);
+    };
     return (
         <nav className="flex py-5 bg-white shadow-xl border-y-2">
             <Toaster position="top-right" richColors duration={2000} />
@@ -94,6 +98,7 @@ export default function Header() {
                                 placeholder="Tìm kiếm sản phẩm"
                                 allowClear
                                 style={{ width: 220 }}
+                                onSearch={onSearch}
                             />
                         </li>
                     </ul>

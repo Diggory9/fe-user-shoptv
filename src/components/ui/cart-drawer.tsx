@@ -6,10 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
+
 import { toast } from "sonner";
 import { handlePriceBeforeDiscount, numberFormatLocationVietNam } from "@/helpers/helper";
 import ApiCart from "@/app/api/cart/cart";
 import { setDataCart } from "@/redux/features/cartSlice";
+
 type CartDrawerProps = {
     open: boolean;
     loading?: boolean;
@@ -34,8 +36,6 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
             return total + item?.price! * item?.quantity!;
         }, 0);
     };
-
-
 
     const handleRemoveItem = (id: string) => {
         if (cart?.data) {
@@ -62,7 +62,10 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                 ) : (
                     <>
                         {cart?.data.map((item) => (
-                            <div className="w-full flex my-5 border-b-2 pb-2 border-gray-700 border-spacing-1" key={item.id}>
+                            <div
+                                className="w-full flex my-5 border-b-2 pb-2 border-gray-700 border-spacing-1"
+                                key={item.id}
+                            >
                                 <div className="w-1/4">
                                     <img src={item?.image?.url} alt="" />
                                 </div>
@@ -70,8 +73,18 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                                     <div>
                                         <div>{item?.name}</div>
                                         <div>
-                                            {numberFormatLocationVietNam(handlePriceBeforeDiscount({ price: item.price || 0, typeDiscout: item.discount?.type || null, valueDiscount: item.discount?.value || null }) || 0)} <span>x</span>{" "}
-                                            {item?.quantity}
+                                            {numberFormatLocationVietNam(
+                                                handlePriceBeforeDiscount({
+                                                    price: item.price || 0,
+                                                    typeDiscout:
+                                                        item.discount?.type ||
+                                                        null,
+                                                    valueDiscount:
+                                                        item.discount?.value ||
+                                                        null,
+                                                }) || 0
+                                            )}{" "}
+                                            <span>x</span> {item?.quantity}
                                         </div>
                                     </div>
                                     <button
@@ -107,7 +120,9 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                                     Xem giỏ hàng
                                 </Button>
                             </Link>
-                            <Button type="primary">Thanh toán</Button>
+                            <Link href={"/checkout"}>
+                                <Button type="primary">Thanh toán</Button>
+                            </Link>
                         </div>
                     </>
                 )}
