@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 
-'use client';
+"use client";
 import InputQuantity from "@/components/ui/input-quantity";
-import { handlePriceBeforeDiscount, numberFormatLocationVietNam } from "@/helpers/helper";
+import {
+    handlePriceBeforeDiscount,
+    numberFormatLocationVietNam,
+} from "@/helpers/helper";
 import { CartModel } from "@/models/cart-model";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +17,6 @@ import { setDataCart } from "@/redux/features/cartSlice";
 import { toast } from "sonner";
 
 export default function CartItem({ cartItem }: { cartItem: CartModel }) {
-
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.authCredentials);
     const [quantity, setQuantity] = useState<number>(cartItem.quantity || 0);
@@ -54,7 +56,6 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
         setQuantity(value);
         handleQuantityChange(quantityChange);
     };
-
     const handleRemoveItem = async (itemId?: string) => {
         try {
             ApiCart.deleteProductToCart({ userId: auth.data?.id || '', productItemId: itemId || '' }).then((data) => {
@@ -85,14 +86,14 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                         <div className="flex cartItems-center mt-5">
                             <p className="text-sm text-gray-500">
                                 <strong>Màu: </strong>&nbsp;
-                                <span>
-                                    {cartItem.color?.colorName}
-                                </span>
+                                <span>{cartItem.color?.colorName}</span>
                             </p>
                             <div
                                 className="rounded-full border-spacing-1 border-gray-600 w-6 h-6 mx-3"
                                 style={{
+
                                     backgroundColor: cartItem.color?.colorCode || "transparent",
+
                                 }}
                             ></div>
                         </div>
@@ -103,7 +104,9 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                                         handlePriceBeforeDiscount({
                                             price: cartItem.price || 0,
                                             typeDiscout: cartItem.discount.type,
+
                                             valueDiscount: cartItem.discount.value || 0,
+
                                         })!
                                     )}
                                 </p>
@@ -126,9 +129,11 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                             className="w-full"
                             max={cartItem.quantityInStock || 1}
                             value={quantity}
+
                             onClickMinus={handleDecreaseQuantity}
                             onClickPlus={handleIncreaseQuantity}
                             onChange={(value) => handleUpdateQuantity(value as number)}
+
 
                         />
                     </div>

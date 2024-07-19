@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import ApiAuth from "@/app/api/auth/auth";
 import { resetCart } from "@/redux/features/cartSlice";
 import { signOut } from "next-auth/react";
+
 const CustomDropdown: React.FC = () => {
     const dispatch = useAppDispatch();
     const { isLogin, data } = useAppSelector(
