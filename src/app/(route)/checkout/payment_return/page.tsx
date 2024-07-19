@@ -38,6 +38,7 @@ export default function CheckoutReturn() {
         };
 
         if (searchParams.get('vnp_ResponseCode') === '00') {
+            savePaymentData();
         } else {
             setLoading(false);
             setStatusMessage("Đang có lỗi trong quá trình giao dịch")

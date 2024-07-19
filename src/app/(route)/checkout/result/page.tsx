@@ -1,23 +1,23 @@
 "use client";
-import { ApiCheckout } from "@/app/api/checkout/checkout";
+import { OrderInfo } from "@/models/order-info-model";
+import { resetCart } from "@/redux/features/cartSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { Button, Result } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
-type dataOrder = {
-    data?: {
-        id?: string;
-    };
-};
 
 export default function Success() {
     const router = useRouter();
-    const [dataOrder, setDataOrder] = useState<dataOrder>({});
+    const dispatcher = useAppDispatch();
+    const [dataOrder, setDataOrder] = useState<OrderInfo | null>(null);
     useEffect(() => {
 
         const dataLocal = localStorage.getItem("dataOrder");
+        console.log(dataLocal);
         if (dataLocal) {
             setDataOrder(JSON.parse(dataLocal));
+            localStorage.removeItem("dataOrder");
+            dispatcher(resetCart());
         }
     }, []);
     const handleBackHome = () => {
@@ -27,7 +27,7 @@ export default function Success() {
         <Result
             status="success"
             title="Đặt hàng thành công"
-            subTitle={`Mã đơn hàng: ${dataOrder?.data?.id || "Không có mã đơn hàng"
+            subTitle={`Mã đơn hàng: ${dataOrder?.id || "Không có mã đơn hàng"
                 }`}
             extra={[
                 <Button type="primary" key="home" onClick={handleBackHome}>

@@ -24,6 +24,7 @@ export const DetailProduct = ({ id }: { id: string }) => {
     const [quantity, setQuantity] = useState<number>(1);
     const router = useRouter();
     const auth = useAppSelector((state) => state.authCredentials);
+    const cart = useAppSelector((state) => state.cartCredentials);
     useEffect(() => {
         ApiProduct.getDetailProducts(id).then((res) => {
             setProduct(res.data);
@@ -73,7 +74,14 @@ export const DetailProduct = ({ id }: { id: string }) => {
             router.push(`/login?callbackUrl=${pathname}`);
         } else {
             try {
-                ApiCart.addProductToCart(auth?.data?.id || '', productItemId || '', null, quantity).then((data) => {
+                let productInCart = cart.data?.find((item) => {
+                    return item.id === productItemId
+                })
+                let quantityIncr = quantity;
+                if (productInCart) {
+                    quantityIncr += productInCart.quantity
+                }
+                ApiCart.addProductToCart(auth?.data?.id || '', productItemId || '', null, quantityIncr).then((data) => {
                     dispatch(setDataCart(data.data));
                     toast.success(
                         "Thêm vào giỏ hàng thành công"
@@ -86,6 +94,17 @@ export const DetailProduct = ({ id }: { id: string }) => {
             }
         }
     };
+
+    const onChangeValue = (value: number) => {
+
+        if (value < 1) {
+            value = 1
+        }
+        if (value >= (selectedProductItem?.quantity || 1)) {
+            value = (selectedProductItem?.quantity || 1)
+        }
+        setQuantity(value)
+    }
 
 
     const selectedProductItem = product?.productItems?.find(
@@ -167,25 +186,15 @@ export const DetailProduct = ({ id }: { id: string }) => {
                                         value={quantity}
                                         onClickMinus={() =>
                                             setQuantity(
-                                                quantity < 2 ? 1 : quantity - 1
+                                                quantity == 1 ? 1 : quantity - 1
                                             )
                                         }
                                         onClickPlus={() =>
                                             setQuantity(
-                                                quantity >
-                                                    (product?.productQuantity
-                                                        ? product?.productQuantity -
-                                                        1
-                                                        : 98)
-                                                    ? product?.productQuantity
-                                                        ? product?.productQuantity
-                                                        : 99
-                                                    : quantity + 1
+                                                quantity == selectedProductItem?.quantity ? selectedProductItem?.quantity : quantity + 1
                                             )
                                         }
-                                        onChange={(value) => {
-                                            setQuantity((value as number) || 1);
-                                        }}
+                                        onChange={(value) => onChangeValue(value as number)}
                                     />
                                 </div>
                                 <div className=" text-center">
