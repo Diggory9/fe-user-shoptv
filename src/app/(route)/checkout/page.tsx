@@ -23,7 +23,7 @@ export default function CheckOutPage() {
     const router = useRouter();
     const cart = useAppSelector((state) => state.cartCredentials);
     const auth = useAppSelector((state) => state.authCredentials);
-    const dispatch = useAppDispatch();
+
     useEffect(() => {
         const fetchProvinces = async () => {
             await ApiDHN.getProvinces()
@@ -53,7 +53,7 @@ export default function CheckOutPage() {
 
         fetchProvinces();
         fetchDataReview();
-    }, [cart.data]);
+    }, []);
     const handleChoiceProvince = async (value: any) => {
         await ApiDHN.getDistricts({ provinceId: value })
             .then((res) => {
@@ -127,24 +127,24 @@ export default function CheckOutPage() {
 
         if (values.typePayment == "COD") {
             try {
-                await ApiCheckout.saveOrder(payload).then((response) => {
-                    if (response.ok) {
-                        //toast.success("Đặt hàng thành công");
+                ApiCheckout.saveOrder(payload)
+                    .then((response) => {
 
-                        const dataOrder = response.json();
-                        localStorage.setItem(
-                            "dataOrder",
-                            JSON.stringify(dataOrder)
-                        );
-                        dispatch(resetCart())
-                        router.push("/checkout/result");
-                    } else {
+                        response.json().then((data) => {
+                            localStorage.setItem(
+                                "dataOrder",
+                                JSON.stringify(data.data)
+                            );
+                            router.push("/checkout/result");
+                        });
+
+
+                    }).catch((error) => {
+                        console.error("Create order:", error);
                         toast.error(
                             "Đơn đặt hàng không thành công xin thử lại sau ít phút"
                         );
-                        throw new Error("Failed to add product");
-                    }
-                });
+                    });
             } catch (error) {
                 console.error("Create order:", error);
             }

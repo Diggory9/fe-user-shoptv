@@ -10,29 +10,34 @@ import type { MenuProps } from "antd";
 import { Dropdown as AntDropdown, Button, Space } from "antd";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { logout } from "@/redux/features/authSlice";
+import { logout, removeAuth } from "@/redux/features/authSlice";
 import { toast } from "sonner";
-import { signOut } from "next-auth/react";
+import ApiAuth from "@/app/api/auth/auth";
 import { resetCart } from "@/redux/features/cartSlice";
+import { signOut } from "next-auth/react";
 
 const CustomDropdown: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { status, error, isLogin, data } = useAppSelector(
+    const { isLogin, data } = useAppSelector(
         (state) => state.authCredentials
     );
-    const auth = useAppSelector((state) => state.authCredentials);
 
     const handleOnClick = () => {
         if (isLogin) {
             const logoutParams = {
                 email: data?.email || "",
             };
-            dispatch(logout(logoutParams)).finally(() => {
-                signOut().finally(() => {
-                    dispatch(resetCart());
-                    toast.success("Đăng xuất thành công!");
-                }); // Gọi hàm signOut từ hook useGoogleLogout
+
+            ApiAuth.authLogout(logoutParams).then((data) => {
+                signOut();
+                dispatch(removeAuth());
+                dispatch(resetCart());
+                toast.success("Đăng xuất thành công!");
+            }).catch((err) => {
+                toast.error("Đăng xuất thất bại");
             });
+
+
         } else {
             toast.error("Logout failed");
         }

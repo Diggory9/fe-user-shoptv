@@ -19,8 +19,7 @@ import { toast } from "sonner";
 export default function CartItem({ cartItem }: { cartItem: CartModel }) {
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.authCredentials);
-
-    const [quantity, setQuantity] = useState<number>(cartItem.quantity);
+    const [quantity, setQuantity] = useState<number>(cartItem.quantity || 0);
 
     const handleQuantityChange = useCallback(debounce((newQuantity) => {
 
