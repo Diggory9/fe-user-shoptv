@@ -107,9 +107,11 @@ export default function Header() {
                 <div className="basis-1/4 flex">
                     <ul className="flex">
                         {auth?.isLogin ? (
-                            <li className="pr-6">
-                                <CustomDropdown></CustomDropdown>
-                            </li>
+                            <>
+                                <li className="pr-6">
+                                    <CustomDropdown></CustomDropdown>
+                                </li>
+                            </>
                         ) : (
                             <>
                                 <li className="pr-6">
