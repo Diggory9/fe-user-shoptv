@@ -1,28 +1,39 @@
-export default function Footer() {
+// components/Footer.js
+import Image from "next/image";
+
+const Footer = () => {
     return (
-        <footer className="bg-white text-black py-8">
-            <div className="container mx-auto text-center">
-                <div className="mb-4">
-                    <h2 className="text-xl font-bold">My E-commerce Site</h2>
+        <footer className="border p-4 md:p-8 lg:p-12 bg-gray-100">
+            <div className="flex flex-col md:flex-row md:justify-around">
+                <div className="w-full md:w-1/3 text-xl font-semibold text-center md:text-left mb-6 md:mb-0">
+                    Về TV
+                    <ul className="text-base mt-2">
+                        <li className="py-1">Giới thiệu</li>
+                        <li className="py-1">Liên hệ</li>
+                        <li className="py-1">Blog</li>
+                    </ul>
                 </div>
-                <div className="mb-4">
-                    <p>
-                        &copy; {new Date().getFullYear()} My E-commerce Site.
-                        All rights reserved.
-                    </p>
+                <div className="w-full md:w-1/3 text-xl font-semibold text-center md:text-left mb-6 md:mb-0">
+                    Hỗ trợ khách hàng
+                    <ul className="text-base mt-2">
+                        <li className="py-1">Câu hỏi thường gặp</li>
+                        <li className="py-1">Hướng dẫn mua hàng</li>
+                        <li className="py-1">Hướng dẫn thanh toán VNPAY</li>
+                    </ul>
                 </div>
-                <div className="flex justify-center space-x-4">
-                    <a href="#" className="hover:text-gray-400">
-                        Privacy Policy
-                    </a>
-                    <a href="#" className="hover:text-gray-400">
-                        Terms of Service
-                    </a>
-                    <a href="#" className="hover:text-gray-400">
-                        Contact Us
-                    </a>
+                <div className="w-full md:w-1/3 text-xl font-semibold text-center md:text-left">
+                    Chính sách
+                    <ul className="text-base mt-2">
+                        <li className="py-1">Chính sách bảo hành</li>
+                        <li className="py-1">Chính sách bảo hành</li>
+                        <li className="py-1">Chính sách bảo hành</li>
+                        <li className="py-1">Chính sách bảo hành</li>
+                        <li className="py-1">Chính sách bảo hành</li>
+                    </ul>
                 </div>
             </div>
         </footer>
     );
-}
+};
+
+export default Footer;
