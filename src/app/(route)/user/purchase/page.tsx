@@ -145,6 +145,7 @@ const Purchase: React.FC = () => {
                 columns={columns}
                 pagination={{ pageSize: 5 }}
                 scroll={{ x: 600 }} // For horizontal scroll on smaller screens
+                size="middle" // Adjust table size
             />
         </div>
     );

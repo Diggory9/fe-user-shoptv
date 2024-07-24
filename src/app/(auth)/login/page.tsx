@@ -8,12 +8,12 @@ export default function Login() {
             <div
                 style={{
                     backgroundImage: "url(/img/hello.png)",
-                    backgroundSize: "100%",
+                    backgroundSize: "cover",
                 }}
-                className=" bg-no-repeat overflow-x-hidden  flex h-screen w-screen items-center justify-end bg-gray-50 "
+                className="bg-no-repeat bg-gray-50 flex h-screen w-screen items-center justify-end "
             >
-                <div className="w-full max-w-lg  rounded-2xl border border-gray-100 shadow-xl mr-52 ">
-                    <div className=" flex flex-col  space-y-3 rounded-lg border-gray-200 bg-white py-8 pt-16 text-center sm:px-16">
+                <div className="w-full max-w-lg rounded-2xl border border-gray-100 shadow-xl bg-white ">
+                    <div className="flex flex-col space-y-3 rounded-lg border-gray-200 bg-white py-8 px-6 text-center sm:px-16">
                         <Toaster
                             position="top-right"
                             richColors

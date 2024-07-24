@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="bg-white">
+            <body className="bg-white ">
                 {/* <React.StrictMode> */}
                 <StoreProvider>
                     <Header />

@@ -7,6 +7,7 @@ import { ApiCheckout } from "@/app/api/checkout/checkout";
 import { OrderInfo } from "@/models/order-info-model";
 import { resetCart } from "@/redux/features/cartSlice";
 import { formatDate, numberFormatLocationVietNam } from "@/helpers/helper";
+import Link from "next/link";
 //import { getCart} from '@/redux/features/cartSlice';
 
 export default function CheckoutReturn() {
@@ -59,7 +60,6 @@ export default function CheckoutReturn() {
     return (
         <Suspense fallback={<>Loading...</>}>
             <div>
-                <h1>Kết quả thanh toán</h1>
                 {statusOrder === "success" && (
                     <Result
                         status={"success"}
@@ -80,20 +80,46 @@ export default function CheckoutReturn() {
                                 </p>
                             </div>
                         }
+                        extra={[
+                            <Link
+                                href={"/"}
+                                type=""
+                                key="home"
+                                className="border-2 p-2 rounded-lg text-gray-200 bg-blue-500"
+                            >
+                                Về trang chủ
+                            </Link>,
+                            <Link
+                                href={"/user/purchase"}
+                                className="border-2 p-2 rounded-lg text-gray-950 hover:border-blue-400"
+                                key="detail"
+                            >
+                                Chi tiết đơn hàng
+                            </Link>,
+                        ]}
                     />
                 )}
                 {statusOrder === "error" && (
                     <Result
                         status={"error"}
                         title={statusMessage}
-                        // subTitle={(
-                        //     <div>
-                        //         <p>Mã giao dịch: {order?.id}</p>
-                        //         <p>Số tiền: {numberFormatLocationVietNam(order?.total || 0)}</p>
-                        //         <p>Ngày: {formatDate(order?.dateCreate)}</p>
-                        //         <p>Nếu có thắc mắc vui lòng liên hệ đến 034421414 để giải đáp</p>
-                        //     </div>
-                        // )}
+                        extra={[
+                            <Link
+                                href={"/"}
+                                type=""
+                                key="home"
+                                className="border-2 p-2 rounded-lg text-gray-200 bg-blue-500"
+                            >
+                                Về trang chủ
+                            </Link>,
+                            <Link
+                                href={"/cart"}
+                                className="border-2 p-2 rounded-lg text-gray-950 hover:border-blue-400"
+                                key="detail"
+                            >
+                                Mua lại
+                            </Link>,
+                        ]}
                     />
                 )}
                 {statusOrder === "warning" && (
