@@ -3,11 +3,11 @@ import { OrderInfo } from "@/models/order-info-model";
 import { resetCart } from "@/redux/features/cartSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { Button, Result } from "antd";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 export default function Success() {
-    const router = useRouter();
     const dispatcher = useAppDispatch();
     const [dataOrder, setDataOrder] = useState<OrderInfo | null>(null);
     useEffect(() => {
@@ -19,12 +19,7 @@ export default function Success() {
             dispatcher(resetCart());
         }
     }, []);
-    const handleBackHome = () => {
-        router.push("/");
-    };
-    const handleGoPurchase = () => {
-        router.push("/user/purchase");
-    };
+
     return (
         <Suspense fallback={<>Loading...</>}>
             <Result
@@ -34,12 +29,21 @@ export default function Success() {
                     dataOrder?.id || "Không có mã đơn hàng"
                 }`}
                 extra={[
-                    <Button type="primary" key="home" onClick={handleBackHome}>
+                    <Link
+                        href={"/"}
+                        type=""
+                        key="home"
+                        className="border-2 p-2 rounded-lg text-gray-200 bg-blue-500"
+                    >
                         Về trang chủ
-                    </Button>,
-                    <Button key="detail" onClick={handleGoPurchase}>
-                        Chi tiết đơn hàng hehe
-                    </Button>,
+                    </Link>,
+                    <Link
+                        href={"/user/purchase"}
+                        className="border-2 p-2 rounded-lg text-gray-950 hover:border-blue-400"
+                        key="detail"
+                    >
+                        Chi tiết đơn hàng
+                    </Link>,
                 ]}
             />
         </Suspense>

@@ -18,9 +18,7 @@ import { signOut } from "next-auth/react";
 
 const CustomDropdown: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { isLogin, data } = useAppSelector(
-        (state) => state.authCredentials
-    );
+    const { isLogin, data } = useAppSelector((state) => state.authCredentials);
 
     const handleOnClick = () => {
         if (isLogin) {
@@ -28,16 +26,16 @@ const CustomDropdown: React.FC = () => {
                 email: data?.email || "",
             };
 
-            ApiAuth.authLogout(logoutParams).then((data) => {
-                signOut();
-                dispatch(removeAuth());
-                dispatch(resetCart());
-                toast.success("Đăng xuất thành công!");
-            }).catch((err) => {
-                toast.error("Đăng xuất thất bại");
-            });
-
-
+            ApiAuth.authLogout(logoutParams)
+                .then((data) => {
+                    signOut();
+                    dispatch(removeAuth());
+                    dispatch(resetCart());
+                    toast.success("Đăng xuất thành công!");
+                })
+                .catch((err) => {
+                    toast.error("Đăng xuất thất bại");
+                });
         } else {
             toast.error("Logout failed");
         }
@@ -77,7 +75,7 @@ const CustomDropdown: React.FC = () => {
                 placement="bottom"
                 icon={<UserOutlined />}
             >
-                Account
+                {data?.userName}
             </AntDropdown.Button>
         </Space>
     );

@@ -40,22 +40,18 @@ export default function Header() {
         <>
             <Suspense>
                 {isClient && (
-                    <nav className="flex flex-wrap items-center justify-between py-5 bg-white shadow-xl border-y-2">
+                    <nav className="flex flex-wrap items-center justify-between py-5 bg-white shadow-xl border-y-2 w-full">
                         <Toaster
                             position="top-right"
                             richColors
                             duration={2000}
                         />
-                        <div className="max-w-screen-2xl flex flex-wrap items-center justify-between mx-auto p-3 w-full">
-                            <div className="basis-1/4 text-center font-extralight text-zinc-700">
-                                <Link href="/">TV FURNITURE</Link>
-                            </div>
+                        <div className=" flex flex-wrap items-center justify-between mx-auto p-3 w-full">
                             <button
                                 data-collapse-toggle="navbar-default"
                                 type="button"
                                 className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                                 aria-controls="navbar-default"
-                                // aria-expanded={menuOpen}
                                 onClick={toggleMenu}
                             >
                                 <svg
@@ -74,15 +70,18 @@ export default function Header() {
                                     />
                                 </svg>
                             </button>
+                            <div className=" basis-1/5 text-center font-extralight text-zinc-700 ">
+                                <Link href="/">TV FURNITURE</Link>
+                            </div>
                             <div
                                 className={`${
                                     menuOpen ? "block" : "hidden"
                                 } md:flex flex-col md:flex-row w-full md:w-auto mt-2 md:mt-0`}
                             >
-                                <ul className="flex flex-col md:flex-row space-x-0 md:space-x-4">
+                                <ul className=" max-w-full flex flex-col md:flex-row space-x-0 md:space-x-4">
                                     <li>
                                         <Link
-                                            className="px-4 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
+                                            className="px-2 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400 md:px-4"
                                             href="/"
                                         >
                                             Trang chủ
@@ -90,7 +89,7 @@ export default function Header() {
                                     </li>
                                     <li>
                                         <Link
-                                            className="px-4 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
+                                            className="px-2 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
                                             href="/product"
                                         >
                                             Sản phẩm
@@ -98,7 +97,7 @@ export default function Header() {
                                     </li>
                                     <li>
                                         <Link
-                                            className="px-4 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
+                                            className="px-2 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
                                             href=""
                                         >
                                             Bộ sưu tập
@@ -106,24 +105,24 @@ export default function Header() {
                                     </li>
                                     <li>
                                         <Link
-                                            className="px-4 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
+                                            className="px-2 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
                                             href=""
                                         >
                                             Liên hệ
                                         </Link>
                                     </li>
+                                </ul>
+                            </div>
+                            <div className="basis-1/3 flex justify-end w-full">
+                                <ul className="flex items-center space-x-3">
                                     <li>
                                         <Search
                                             placeholder="Tìm kiếm sản phẩm"
                                             allowClear
-                                            style={{ width: 220 }}
+                                            style={{ width: 200 }}
                                             onSearch={onSearch}
                                         />
                                     </li>
-                                </ul>
-                            </div>
-                            <div className="basis-1/4 flex justify-end space-x-6">
-                                <ul className="flex items-center space-x-6">
                                     {auth?.isLogin ? (
                                         <li suppressHydrationWarning>
                                             <CustomDropdown />
