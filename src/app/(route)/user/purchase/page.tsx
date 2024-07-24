@@ -9,7 +9,6 @@ import { OrderData, OrderModel } from "@/models/order-model";
 import { error } from "console";
 
 const Purchase: React.FC = () => {
-    const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.authCredentials);
     const [orders, setOrders] = useState<OrderModel[]>([]);
     const { confirm } = Modal;
