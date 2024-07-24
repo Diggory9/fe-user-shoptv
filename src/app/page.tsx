@@ -1,6 +1,7 @@
 import CProduct from "@/app/(route)/product/page";
 import BannerSlide from "@/components/ui/banner-slide";
 import ContactUs from "@/components/ui/contact-us";
+import { Suspense } from "react";
 
 export default function Home() {
     // console.log(process.env.GOOGLE_CLIENT_ID);
@@ -12,9 +13,11 @@ export default function Home() {
     ];
     return (
         <>
-            <BannerSlide listImage={bannerImage} />
-            <CProduct />
-            <ContactUs />
+            <Suspense fallback={<>Loading...</>}>
+                <BannerSlide listImage={bannerImage} />
+                <CProduct />
+                <ContactUs />
+            </Suspense>
         </>
     );
 }
