@@ -13,11 +13,9 @@ export default function Home() {
     ];
     return (
         <>
-            <Suspense fallback={<>Loading...</>}>
-                <BannerSlide listImage={bannerImage} />
-                <CProduct />
-                <ContactUs />
-            </Suspense>
+            <BannerSlide listImage={bannerImage} />
+            <CProduct />
+            <ContactUs />
         </>
     );
 }

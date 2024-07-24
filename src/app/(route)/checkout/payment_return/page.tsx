@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Result, Spin } from "antd";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -57,60 +57,64 @@ export default function CheckoutReturn() {
     }
 
     return (
-        <div>
-            <h1>Kết quả thanh toán</h1>
-            {statusOrder === "success" && (
-                <Result
-                    status={"success"}
-                    title={statusMessage}
-                    subTitle={
-                        <div>
-                            <p>Mã giao dịch: {order?.id}</p>
-                            <p>
-                                Số tiền:{" "}
-                                {numberFormatLocationVietNam(order?.total || 0)}
-                            </p>
-                            <p>Ngày: {formatDate(order?.dateCreate)}</p>
-                            <p>
-                                Nếu có thắc mắc vui lòng liên hệ đến 034421414
-                                để giải đáp
-                            </p>
-                        </div>
-                    }
-                />
-            )}
-            {statusOrder === "error" && (
-                <Result
-                    status={"error"}
-                    title={statusMessage}
-                    // subTitle={(
-                    //     <div>
-                    //         <p>Mã giao dịch: {order?.id}</p>
-                    //         <p>Số tiền: {numberFormatLocationVietNam(order?.total || 0)}</p>
-                    //         <p>Ngày: {formatDate(order?.dateCreate)}</p>
-                    //         <p>Nếu có thắc mắc vui lòng liên hệ đến 034421414 để giải đáp</p>
-                    //     </div>
-                    // )}
-                />
-            )}
-            {statusOrder === "warning" && (
-                <Result
-                    status={"warning"}
-                    title={statusMessage}
-                    subTitle={
-                        <div>
-                            <p>
-                                Đơn hàng đang xãy ra lỗi xin vui lòng liên hệ
-                                đến để giải đáp thắc mắc
-                            </p>
-                            <p>
-                                Nếu có thắc mắc vui lòng liên hệ đến 034421414
-                                để giải đáp
-                            </p>
-                        </div>
-                    }
-                />
-            )}
-        </div>
+        <Suspense fallback={<>Loading...</>}>
+            <div>
+                <h1>Kết quả thanh toán</h1>
+                {statusOrder === "success" && (
+                    <Result
+                        status={"success"}
+                        title={statusMessage}
+                        subTitle={
+                            <div>
+                                <p>Mã giao dịch: {order?.id}</p>
+                                <p>
+                                    Số tiền:{" "}
+                                    {numberFormatLocationVietNam(
+                                        order?.total || 0
+                                    )}
+                                </p>
+                                <p>Ngày: {formatDate(order?.dateCreate)}</p>
+                                <p>
+                                    Nếu có thắc mắc vui lòng liên hệ đến
+                                    034421414 để giải đáp
+                                </p>
+                            </div>
+                        }
+                    />
+                )}
+                {statusOrder === "error" && (
+                    <Result
+                        status={"error"}
+                        title={statusMessage}
+                        // subTitle={(
+                        //     <div>
+                        //         <p>Mã giao dịch: {order?.id}</p>
+                        //         <p>Số tiền: {numberFormatLocationVietNam(order?.total || 0)}</p>
+                        //         <p>Ngày: {formatDate(order?.dateCreate)}</p>
+                        //         <p>Nếu có thắc mắc vui lòng liên hệ đến 034421414 để giải đáp</p>
+                        //     </div>
+                        // )}
+                    />
+                )}
+                {statusOrder === "warning" && (
+                    <Result
+                        status={"warning"}
+                        title={statusMessage}
+                        subTitle={
+                            <div>
+                                <p>
+                                    Đơn hàng đang xãy ra lỗi xin vui lòng liên
+                                    hệ đến để giải đáp thắc mắc
+                                </p>
+                                <p>
+                                    Nếu có thắc mắc vui lòng liên hệ đến
+                                    034421414 để giải đáp
+                                </p>
+                            </div>
+                        }
+                    />
+                )}
+            </div>
+        </Suspense>
     );
 }
