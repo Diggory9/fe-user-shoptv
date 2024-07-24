@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 "use client";
 import InputQuantity from "@/components/ui/input-quantity";
 import {
@@ -21,15 +19,23 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
     const auth = useAppSelector((state) => state.authCredentials);
     const [quantity, setQuantity] = useState<number>(cartItem.quantity || 0);
 
-    const handleQuantityChange = useCallback(debounce((newQuantity) => {
-
-        ApiCart.addProductToCart(auth?.data?.id || '', cartItem?.id || '', null, newQuantity).then((data) => {
-            dispatch(setDataCart(data.data));
-
-        }).catch(() => {
-            toast.error("Cập nhật sản phẩm thất bại");
-        });
-    }, 1000), []);
+    const handleQuantityChange = useCallback(
+        debounce((newQuantity) => {
+            ApiCart.addProductToCart(
+                auth?.data?.id || "",
+                cartItem?.id || "",
+                null,
+                newQuantity
+            )
+                .then((data) => {
+                    dispatch(setDataCart(data.data));
+                })
+                .catch(() => {
+                    toast.error("Cập nhật sản phẩm thất bại");
+                });
+        }, 1000),
+        []
+    );
 
     const handleDecreaseQuantity = () => {
         if (quantity > 1) {
@@ -52,17 +58,22 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
             return;
         }
         const quantityChange = value - quantity;
-        console.log(quantityChange)
+        console.log(quantityChange);
         setQuantity(value);
         handleQuantityChange(quantityChange);
     };
     const handleRemoveItem = async (itemId?: string) => {
         try {
-            ApiCart.deleteProductToCart({ userId: auth.data?.id || '', productItemId: itemId || '' }).then((data) => {
-                dispatch(setDataCart(data.data));
-            }).catch(() => {
-                toast.error("Xóa sản phẩm thất bại");
-            });
+            ApiCart.deleteProductToCart({
+                userId: auth.data?.id || "",
+                productItemId: itemId || "",
+            })
+                .then((data) => {
+                    dispatch(setDataCart(data.data));
+                })
+                .catch(() => {
+                    toast.error("Xóa sản phẩm thất bại");
+                });
         } catch (error) {
             toast.error("Có lỗi xảy ra");
         }
@@ -91,9 +102,9 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                             <div
                                 className="rounded-full border-spacing-1 border-gray-600 w-6 h-6 mx-3"
                                 style={{
-
-                                    backgroundColor: cartItem.color?.colorCode || "transparent",
-
+                                    backgroundColor:
+                                        cartItem.color?.colorCode ||
+                                        "transparent",
                                 }}
                             ></div>
                         </div>
@@ -105,18 +116,22 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                                             price: cartItem.price || 0,
                                             typeDiscout: cartItem.discount.type,
 
-                                            valueDiscount: cartItem.discount.value || 0,
-
+                                            valueDiscount:
+                                                cartItem.discount.value || 0,
                                         })!
                                     )}
                                 </p>
                                 <p className="text-base line-through text-gray-700 mt-1">
-                                    {numberFormatLocationVietNam(cartItem.price || 0)}
+                                    {numberFormatLocationVietNam(
+                                        cartItem.price || 0
+                                    )}
                                 </p>
                             </>
                         ) : (
                             <p className="text-lg text-black mt-3">
-                                {numberFormatLocationVietNam(cartItem.price || 0)}
+                                {numberFormatLocationVietNam(
+                                    cartItem.price || 0
+                                )}
                             </p>
                         )}
                         <p className="text-sm text-gray-500">
@@ -129,12 +144,11 @@ export default function CartItem({ cartItem }: { cartItem: CartModel }) {
                             className="w-full"
                             max={cartItem.quantityInStock || 1}
                             value={quantity}
-
                             onClickMinus={handleDecreaseQuantity}
                             onClickPlus={handleIncreaseQuantity}
-                            onChange={(value) => handleUpdateQuantity(value as number)}
-
-
+                            onChange={(value) =>
+                                handleUpdateQuantity(value as number)
+                            }
                         />
                     </div>
                 </div>
