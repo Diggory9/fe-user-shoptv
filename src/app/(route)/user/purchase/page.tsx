@@ -138,12 +138,14 @@ const Purchase: React.FC = () => {
           }))
         : [];
     return (
-        <div style={{ padding: "20px" }}>
+        <div className="p-4 sm:p-6 md:p-8">
             <h1 className="text-2xl font-bold pb-6">Thông tin đơn hàng</h1>
             <Table
                 rowKey="orderNumber"
                 dataSource={dataSource}
                 columns={columns}
+                pagination={{ pageSize: 5 }}
+                scroll={{ x: 600 }} // For horizontal scroll on smaller screens
             />
         </div>
     );

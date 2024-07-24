@@ -3,9 +3,11 @@ import { Toaster } from "sonner";
 
 export default function ChangePassword() {
     return (
-        <div className="w-1/3 p-5">
-            <Toaster position="top-right" richColors></Toaster>
-            <ResetPasswordForm></ResetPasswordForm>
+        <div className="flex">
+            <div className="w-full max-w-md p-5 bg-white rounded-lg ">
+                <Toaster position="top-right" richColors duration={2000} />
+                <ResetPasswordForm />
+            </div>
         </div>
     );
 }

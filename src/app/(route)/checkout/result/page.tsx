@@ -11,7 +11,6 @@ export default function Success() {
     const dispatcher = useAppDispatch();
     const [dataOrder, setDataOrder] = useState<OrderInfo | null>(null);
     useEffect(() => {
-
         const dataLocal = localStorage.getItem("dataOrder");
         console.log(dataLocal);
         if (dataLocal) {
@@ -23,17 +22,21 @@ export default function Success() {
     const handleBackHome = () => {
         router.push("/");
     };
+    const handleGoPurchase = () => {
+        router.push("/user/purchase");
+    };
     return (
         <Result
             status="success"
             title="Đặt hàng thành công"
-            subTitle={`Mã đơn hàng: ${dataOrder?.id || "Không có mã đơn hàng"
-                }`}
+            subTitle={`Mã đơn hàng: ${dataOrder?.id || "Không có mã đơn hàng"}`}
             extra={[
                 <Button type="primary" key="home" onClick={handleBackHome}>
                     Về trang chủ
                 </Button>,
-                <Button key="detail">Chi tiết đơn hàng hehe</Button>,
+                <Button key="detail" onClick={handleGoPurchase}>
+                    Chi tiết đơn hàng hehe
+                </Button>,
             ]}
         />
     );

@@ -4,8 +4,11 @@ import Head from "next/head";
 export default function ContactUs() {
     return (
         <div
-            style={{ backgroundImage: "url(/img/hello.png)" }}
-            className="min-h-screen bg-gray-100 flex items-center justify-end"
+            style={{
+                backgroundImage: "url(/img/hello.png)",
+                backgroundSize: "100%",
+            }}
+            className=" bg-no-repeat overflow-x-hidden  flex h-screen w-screen items-center justify-end bg-gray-50 "
         >
             <Head>
                 <title>Contact Us</title>

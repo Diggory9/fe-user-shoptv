@@ -20,26 +20,29 @@ import { setDataCart } from "@/redux/features/cartSlice";
 export default function LoginForm() {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-    const { data: session, status } = useSession();
+
     const router = useRouter();
     const params = useSearchParams();
-    const [isLoggin, setIsLogin] = useState(false);
+
     const auth = useAppSelector((state) => state.authCredentials);
     const onFinish = (value: any) => {
         console.log(value);
 
         try {
-            ApiAuth.authLogin({ email: value.userNameOrEmail, password: value.password }).then((data) => {
+            ApiAuth.authLogin({
+                email: value.userNameOrEmail,
+                password: value.password,
+            }).then((data) => {
                 dispatch(setAuthData(data.data));
-                console.log(data.data)
+                console.log(data.data);
                 ApiCart.getCartByUser(data.data.id).then((data) => {
-                    console.log(data)
+                    console.log(data);
                     dispatch(setDataCart(data.data));
                     toast.success("Login successful!");
 
                     router.push(params.get("callbackUrl") || "/");
-                })
-            })
+                });
+            });
         } catch (error) {
             console.error("Error during fetch:", error);
         }
