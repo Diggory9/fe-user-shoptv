@@ -2,7 +2,7 @@
 import ApiAuth from "@/app/api/auth/auth";
 import { useAppSelector } from "@/redux/hooks";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Col, Form, Input } from "antd";
 import { error } from "console";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -48,52 +48,54 @@ export default function ResetPasswordForm() {
             onFinish={onFinish}
             layout="vertical"
         >
-            <Form.Item name="UserName" label="UserName">
-                <Input disabled />
-            </Form.Item>
-            <Form.Item
-                name="currentPassword"
-                label="Mật khẩu hiện tại"
-                rules={[
-                    {
-                        required: true,
-                        message: "Please input your current password!",
-                    },
-                ]}
-            >
-                <Input.Password prefix={<LockOutlined />} />
-            </Form.Item>
+            <Col span={6}>
+                <Form.Item name="UserName" label="UserName">
+                    <Input disabled />
+                </Form.Item>
+                <Form.Item
+                    name="currentPassword"
+                    label="Mật khẩu hiện tại"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your current password!",
+                        },
+                    ]}
+                >
+                    <Input.Password prefix={<LockOutlined />} />
+                </Form.Item>
 
-            <Form.Item
-                name="newPassword"
-                label="Mật khẩu mới"
-                rules={[
-                    {
-                        required: true,
-                        message: "Please input your new password!",
-                    },
-                ]}
-            >
-                <Input.Password prefix={<LockOutlined />} />
-            </Form.Item>
+                <Form.Item
+                    name="newPassword"
+                    label="Mật khẩu mới"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your new password!",
+                        },
+                    ]}
+                >
+                    <Input.Password prefix={<LockOutlined />} />
+                </Form.Item>
 
-            <Form.Item
-                name="confirmPassword"
-                label="Xác nhận mật khẩu mới"
-                dependencies={["newPassword"]}
-                rules={[
-                    {
-                        required: true,
-                        message: "Please input your new password!",
-                    },
-                ]}
-            >
-                <Input.Password prefix={<LockOutlined />} />
-            </Form.Item>
+                <Form.Item
+                    name="confirmPassword"
+                    label="Xác nhận mật khẩu mới"
+                    dependencies={["newPassword"]}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your new password!",
+                        },
+                    ]}
+                >
+                    <Input.Password prefix={<LockOutlined />} />
+                </Form.Item>
 
-            <Button type="primary" htmlType="submit">
-                Thay đổi mật khẩu
-            </Button>
+                <Button type="primary" htmlType="submit">
+                    Thay đổi mật khẩu
+                </Button>
+            </Col>
         </Form>
     );
 }
