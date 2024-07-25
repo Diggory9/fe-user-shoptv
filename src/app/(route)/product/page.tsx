@@ -57,6 +57,7 @@ export default function CProduct() {
                     setLoading(false);
                 });
         } else {
+            setPageNumber(1);
             ApiProduct.getProductPublicByCategory({
                 id: value,
                 pageNumber: pageNumber,
@@ -76,12 +77,6 @@ export default function CProduct() {
     return (
         <div>
             <div className="bg-white flex flex-col sm:flex-row w-full mx-5 mt-10">
-                <button
-                    className="sm:hidden mb-4 px-4 py-2 bg-blue-500 text-white rounded"
-                    onClick={() => setShowCategory(!showCategory)}
-                >
-                    {showCategory ? "Hide Categories" : "Show Categories"}
-                </button>
                 <div
                     className={`w-full ${
                         showCategory ? "block" : "hidden"

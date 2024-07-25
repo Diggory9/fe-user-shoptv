@@ -97,7 +97,7 @@ export default function LoginForm() {
                     </Form.Item>
                 </div>
 
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" className="w-full">
                     Đăng nhập
                 </Button>
                 <div className="pt-3">
