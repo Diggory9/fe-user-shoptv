@@ -1,19 +1,11 @@
+import { fetchClient } from "@/app/api/fetchClient";
 
 
 export const ApiCheckout = {
     async reviewCart(body: any) {
         try {
-            const response = await fetch(`${process.env.API_URL}/Order/review-checkout`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
+            const response = await fetchClient({ method: "POST", param: `Order/review-checkout`, body });
+            return response;
         }
         catch (error) {
             console.error("Error during fetch:", error);
@@ -21,39 +13,16 @@ export const ApiCheckout = {
         }
     },
     async saveOrder(body: any) {
-
-        console.log(process.env.API_URL),
-            console.log(body)
-        const response = await fetch(`${process.env.API_URL}/Order/create`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-        });
-
-
+        const response = await fetchClient({ param: `Order/create`, method: "POST", body });
         return response;
 
     },
     async getUrlVnpay(body: any) {
         try {
-            const response = await fetch(
-                `${process.env.API_URL}/Payment/vnpay`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(body),
-                }
-            );
+            const response = await fetchClient({ method: "POST", param: `Payment/vnpay`, body });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = response.json();
-            return data;
+
+            return response;
 
         } catch (error) {
             console.error("Get url:", error);

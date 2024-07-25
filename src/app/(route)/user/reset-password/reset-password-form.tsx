@@ -3,7 +3,7 @@ import ApiAuth from "@/app/api/auth/auth";
 import { useAppSelector } from "@/redux/hooks";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
-import { error } from "console";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -15,6 +15,7 @@ export interface ResetPasswordModel {
 }
 
 export default function ResetPasswordForm() {
+    const router = useRouter();
     const [form] = Form.useForm();
     const auth = useAppSelector((state) => state.authCredentials);
     console.log(auth.data);
@@ -39,9 +40,12 @@ export default function ResetPasswordForm() {
             });
     };
     useEffect(() => {
+        if (!auth?.isLogin) {
+            router.push('/login?callbackUrl=/user/reset-password');
+        }
         form.setFieldValue("UserName", auth.data?.userName);
     }, [auth.data?.userName, form]);
-    return (
+    return auth?.isLogin ? (
         <Form
             form={form}
             name="change_password"
@@ -95,5 +99,5 @@ export default function ResetPasswordForm() {
                 Thay đổi mật khẩu
             </Button>
         </Form>
-    );
+    ) : null;
 }

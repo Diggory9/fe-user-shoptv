@@ -8,14 +8,19 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Badge, Button } from "antd";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { toast } from "sonner";
+
 
 export default function CartPageComponent() {
     const dispatch = useAppDispatch();
+    const router = useRouter();
     const cart = useAppSelector((state) => state.cartCredentials);
+    const auth = useAppSelector((state) => state.authCredentials);
     useEffect(() => {
+        if (!auth.isLogin) {
+            router.push('/login?callbackUrl=/cart');
+        }
         if (cart?.status === "deleteSuccessed") {
             dispatch(resetCartStatus());
         }
@@ -33,10 +38,10 @@ export default function CartPageComponent() {
     }, 0);
 
     const handleContinueShopping = () => {
-        redirect("/product");
+        router.push("/product");
     };
 
-    return (
+    return auth?.isLogin ? (
         <div className="container mx-auto px-4 py-8 bg-white">
             <Badge
                 offset={[20, 0]}
@@ -65,5 +70,5 @@ export default function CartPageComponent() {
                 <FontAwesomeIcon icon={faArrowLeft} /> &nbsp; Tiếp tục mua sắm
             </Button>
         </div>
-    );
+    ) : null;
 }
