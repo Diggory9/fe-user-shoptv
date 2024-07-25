@@ -41,7 +41,7 @@ export default function ResetPasswordForm() {
     };
     useEffect(() => {
         if (!auth?.isLogin) {
-            router.push('/login?callbackUrl=/user/reset-password');
+            router.push("/login?callbackUrl=/user/reset-password");
         }
         form.setFieldValue("UserName", auth.data?.userName);
     }, [auth.data?.userName, form]);
@@ -52,52 +52,54 @@ export default function ResetPasswordForm() {
             onFinish={onFinish}
             layout="vertical"
         >
-            <Form.Item name="UserName" label="UserName">
-                <Input disabled />
-            </Form.Item>
-            <Form.Item
-                name="currentPassword"
-                label="Mật khẩu hiện tại"
-                rules={[
-                    {
-                        required: true,
-                        message: "Please input your current password!",
-                    },
-                ]}
-            >
-                <Input.Password prefix={<LockOutlined />} />
-            </Form.Item>
+            <Col span={6}>
+                <Form.Item name="UserName" label="UserName">
+                    <Input disabled />
+                </Form.Item>
+                <Form.Item
+                    name="currentPassword"
+                    label="Mật khẩu hiện tại"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your current password!",
+                        },
+                    ]}
+                >
+                    <Input.Password prefix={<LockOutlined />} />
+                </Form.Item>
 
-            <Form.Item
-                name="newPassword"
-                label="Mật khẩu mới"
-                rules={[
-                    {
-                        required: true,
-                        message: "Please input your new password!",
-                    },
-                ]}
-            >
-                <Input.Password prefix={<LockOutlined />} />
-            </Form.Item>
+                <Form.Item
+                    name="newPassword"
+                    label="Mật khẩu mới"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your new password!",
+                        },
+                    ]}
+                >
+                    <Input.Password prefix={<LockOutlined />} />
+                </Form.Item>
 
-            <Form.Item
-                name="confirmPassword"
-                label="Xác nhận mật khẩu mới"
-                dependencies={["newPassword"]}
-                rules={[
-                    {
-                        required: true,
-                        message: "Please input your new password!",
-                    },
-                ]}
-            >
-                <Input.Password prefix={<LockOutlined />} />
-            </Form.Item>
+                <Form.Item
+                    name="confirmPassword"
+                    label="Xác nhận mật khẩu mới"
+                    dependencies={["newPassword"]}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your new password!",
+                        },
+                    ]}
+                >
+                    <Input.Password prefix={<LockOutlined />} />
+                </Form.Item>
 
-            <Button type="primary" htmlType="submit">
-                Thay đổi mật khẩu
-            </Button>
+                <Button type="primary" htmlType="submit">
+                    Thay đổi mật khẩu
+                </Button>
+            </Col>
         </Form>
     ) : null;
 }
