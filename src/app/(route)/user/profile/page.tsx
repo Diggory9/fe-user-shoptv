@@ -1,10 +1,17 @@
 "use client";
 import { useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Profile() {
+    const router = useRouter();
     const auth = useAppSelector((state) => state.authCredentials);
-
-    return (
+    useEffect(() => {
+        if (!auth?.isLogin) {
+            router.push('/login?callbackUrl=/user/profile');
+        }
+    });
+    return auth?.isLogin ? (
         <div className="flex w-full min-h-screen bg-gray-100">
             <div className="bg-white shadow-lg rounded-lg p-8 w-full ">
                 <h1 className="text-2xl font-bold  mb-6">Thông tin cá nhân</h1>
@@ -40,5 +47,5 @@ export default function Profile() {
                 </div>
             </div>
         </div>
-    );
+    ) : null;
 }

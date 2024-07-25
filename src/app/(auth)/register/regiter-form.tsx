@@ -119,7 +119,7 @@ export default function RegisterForm() {
                     placeholder="ConfirmPassword"
                 />
             </Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" className="w-full" style={{ backgroundColor: '#14452f', borderColor: '#0A5C56' }}>
                 Đăng ký
             </Button>
             <div className="pt-3">

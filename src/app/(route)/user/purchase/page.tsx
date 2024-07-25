@@ -6,26 +6,26 @@ import { ExclamationCircleFilled } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import ApiOrder from "@/app/api/order/order-api";
 import { OrderData, OrderModel } from "@/models/order-model";
-import { error } from "console";
-
+import { useRouter } from "next/navigation";
 const Purchase: React.FC = () => {
+    const router = useRouter();
     const auth = useAppSelector((state) => state.authCredentials);
     const [orders, setOrders] = useState<OrderModel[]>([]);
     const { confirm } = Modal;
-    console.log(auth?.data?.id);
     useEffect(() => {
+        if (!auth?.isLogin) {
+            router.push('/login?callbackUrl=/user/profile');
+        }
         if (auth?.data?.id) {
             ApiOrder.getOrdersByUserId(auth?.data?.id)
                 .then((res) => {
                     setOrders(res.data);
                 })
                 .catch((error) => {
-                    console.log(error);
+
                 });
         }
     }, [auth?.data?.id]);
-    console.log(orders);
-
     const columns = [
         {
             title: "STT",
@@ -128,15 +128,15 @@ const Purchase: React.FC = () => {
 
     const dataSource: OrderData[] = Array.isArray(orders)
         ? orders.map((item, index) => ({
-              key: item.id || index,
-              stt: index + 1,
-              orderNumber: item.id || "",
-              status: item.status || "",
-              recipientName: item.recipientName || "",
-              total: item.total || 0,
-          }))
+            key: item.id || index,
+            stt: index + 1,
+            orderNumber: item.id || "",
+            status: item.status || "",
+            recipientName: item.recipientName || "",
+            total: item.total || 0,
+        }))
         : [];
-    return (
+    return auth?.isLogin ? (
         <div className="p-4 sm:p-6 md:p-8">
             <h1 className="text-2xl font-bold pb-6">Thông tin đơn hàng</h1>
             <Table
@@ -148,7 +148,7 @@ const Purchase: React.FC = () => {
                 size="middle" // Adjust table size
             />
         </div>
-    );
+    ) : null;
 };
 
 export default Purchase;

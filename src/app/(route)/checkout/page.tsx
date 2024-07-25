@@ -10,8 +10,6 @@ import { Suspense, useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { numberFormatLocationVietNam } from "@/helpers/helper";
-import { resetCart } from "@/redux/features/cartSlice";
-
 export default function CheckOutPage() {
     const [dataProvince, setDataProvince] = useState<ProvinceModel[]>([]);
     const [dataDistrict, setDataDistrict] = useState<DistrictModel[]>([]);
@@ -25,6 +23,9 @@ export default function CheckOutPage() {
     const auth = useAppSelector((state) => state.authCredentials);
 
     useEffect(() => {
+        if (!auth.isLogin) {
+            router.push('/login?callbackUrl=/checkout');
+        }
         const fetchProvinces = async () => {
             await ApiDHN.getProvinces()
                 .then((res) => {
@@ -70,7 +71,7 @@ export default function CheckOutPage() {
             .then((res) => {
                 setDataWard(res.data);
             })
-            .catch((err) => {});
+            .catch((err) => { });
     };
     const provinceOptions = dataProvince?.map((item) => ({
         value: item?.ProvinceID,
@@ -129,13 +130,12 @@ export default function CheckOutPage() {
             try {
                 ApiCheckout.saveOrder(payload)
                     .then((response) => {
-                        response.json().then((data) => {
-                            localStorage.setItem(
-                                "dataOrder",
-                                JSON.stringify(data.data)
-                            );
-                            router.push("/checkout/result");
-                        });
+
+                        localStorage.setItem(
+                            "dataOrder",
+                            JSON.stringify(response.data)
+                        );
+                        router.push("/checkout/result");
                     })
                     .catch((error) => {
                         console.error("Create order:", error);
@@ -158,11 +158,11 @@ export default function CheckOutPage() {
                             "Đơn đặt hàng không thành công xin thử lại sau ít phút"
                         );
                     });
-            } catch (error) {}
+            } catch (error) { }
         }
     };
 
-    return (
+    return auth?.isLogin ? (
         <Suspense fallback={<>Loading...</>}>
             <div className="container mx-auto px-4 py-8">
                 <Toaster position="top-right" richColors />
@@ -397,13 +397,13 @@ export default function CheckOutPage() {
                                                         </p>
                                                         {item.amountDiscount !==
                                                             0 && (
-                                                            <p className="text-red-600">
-                                                                Giảm giá:{" "}
-                                                                {numberFormatLocationVietNam(
-                                                                    item.amountDiscount
-                                                                )}
-                                                            </p>
-                                                        )}
+                                                                <p className="text-red-600">
+                                                                    Giảm giá:{" "}
+                                                                    {numberFormatLocationVietNam(
+                                                                        item.amountDiscount
+                                                                    )}
+                                                                </p>
+                                                            )}
                                                         <p className="text-gray-600">
                                                             Giá:{" "}
                                                             {numberFormatLocationVietNam(
@@ -494,5 +494,5 @@ export default function CheckOutPage() {
                 </Form>
             </div>
         </Suspense>
-    );
+    ) : null;
 }
