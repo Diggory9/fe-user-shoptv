@@ -3,7 +3,6 @@ import ApiAuth from "@/app/api/auth/auth";
 import { useAppSelector } from "@/redux/hooks";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
-import { error } from "console";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
