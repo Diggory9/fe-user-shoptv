@@ -28,7 +28,7 @@ const callouts = [
         href: "#",
     },
     {
-        name: "Travel",
+        name: "Travel2",
         description: "Daily commute essentials",
         imageSrc:
             "https://tailwindui.com/img/ecommerce-images/home-page-02-edition-03.jpg",
@@ -37,7 +37,7 @@ const callouts = [
         href: "#",
     },
     {
-        name: "Travel",
+        name: "Travel3",
         description: "Daily commute essentials",
         imageSrc:
             "https://tailwindui.com/img/ecommerce-images/home-page-02-edition-03.jpg",
@@ -46,7 +46,7 @@ const callouts = [
         href: "#",
     },
     {
-        name: "Travel",
+        name: "Travel4",
         description: "Daily commute essentials",
         imageSrc:
             "https://tailwindui.com/img/ecommerce-images/home-page-02-edition-03.jpg",

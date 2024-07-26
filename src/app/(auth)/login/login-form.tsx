@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-    externalLogin,
-    login,
-    resetAuthStatus,
-    setAuthData,
-} from "@/redux/features/authSlice";
+import { setAuthData } from "@/redux/features/authSlice";
 import { GoogleSignInButton } from "@/components/ui/auth-button";
 import { useSession } from "next-auth/react";
 import { Button, Form, Input } from "antd";
@@ -17,6 +12,7 @@ import Link from "next/link";
 import ApiAuth from "@/app/api/auth/auth";
 import ApiCart from "@/app/api/cart/cart";
 import { setDataCart } from "@/redux/features/cartSlice";
+import { error } from "console";
 export default function LoginForm() {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
@@ -24,28 +20,29 @@ export default function LoginForm() {
     const router = useRouter();
     const params = useSearchParams();
 
-    const auth = useAppSelector((state) => state.authCredentials);
+    // const auth = useAppSelector((state) => state.authCredentials);
     const onFinish = (value: any) => {
         console.log(value);
+        ApiAuth.authLogin({
+            email: value.userNameOrEmail,
+            password: value.password,
+        }).then((res) => {
+            res?.json().then((data) => {
+                dispatch(setAuthData(data?.data));
+                // console.log(data.data);
+                ApiCart.getCartByUser(data?.data?.id)
+                    .then((data) => {
+                        // console.log(data);
+                        dispatch(setDataCart(data?.data));
+                        toast.success("Login successful!");
 
-        try {
-            ApiAuth.authLogin({
-                email: value.userNameOrEmail,
-                password: value.password,
-            }).then((data) => {
-                dispatch(setAuthData(data.data));
-                console.log(data.data);
-                ApiCart.getCartByUser(data.data.id).then((data) => {
-                    console.log(data);
-                    dispatch(setDataCart(data.data));
-                    toast.success("Login successful!");
-
-                    router.push(params.get("callbackUrl") || "/");
-                });
+                        router.push(params.get("callbackUrl") || "/");
+                    })
+                    .catch(() => {
+                        toast.error("Thông tin không hợp lệ!");
+                    });
             });
-        } catch (error) {
-            console.error("Error during fetch:", error);
-        }
+        });
     };
 
     return (

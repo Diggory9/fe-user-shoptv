@@ -1,18 +1,16 @@
-'use client'
-import { Provider } from 'react-redux'
-import { persistor, store } from '@/redux/store'
+"use client";
+import { Provider } from "react-redux";
+import { persistor, store } from "@/redux/store";
 
-import { SessionProvider } from 'next-auth/react';
-import { PersistGate } from 'redux-persist/integration/react';
+import { SessionProvider } from "next-auth/react";
+import { PersistGate } from "redux-persist/integration/react";
 export default function StoreProvider({
     children,
 }: {
-    children: React.ReactNode
+    children: React.ReactNode;
 }) {
-
-    console.log("store: ", store.getState());
+    // console.log("store: ", store.getState());
     return (
-
         <SessionProvider>
             <Provider store={store}>
                 {/* <PersistGate persistor={persistor}>
@@ -20,5 +18,6 @@ export default function StoreProvider({
                 </PersistGate> */}
                 {children}
             </Provider>
-        </SessionProvider>)
+        </SessionProvider>
+    );
 }

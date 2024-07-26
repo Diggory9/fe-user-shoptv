@@ -14,16 +14,14 @@ const Purchase: React.FC = () => {
     const { confirm } = Modal;
     useEffect(() => {
         if (!auth?.isLogin) {
-            router.push('/login?callbackUrl=/user/profile');
+            router.push("/login?callbackUrl=/user/profile");
         }
         if (auth?.data?.id) {
             ApiOrder.getOrdersByUserId(auth?.data?.id)
                 .then((res) => {
                     setOrders(res.data);
                 })
-                .catch((error) => {
-
-                });
+                .catch((error) => {});
         }
     }, [auth?.data?.id]);
     const columns = [
@@ -128,27 +126,26 @@ const Purchase: React.FC = () => {
 
     const dataSource: OrderData[] = Array.isArray(orders)
         ? orders.map((item, index) => ({
-            key: item.id || index,
-            stt: index + 1,
-            orderNumber: item.id || "",
-            status: item.status || "",
-            recipientName: item.recipientName || "",
-            total: item.total || 0,
-        }))
+              key: item.id || index,
+              stt: index + 1,
+              orderNumber: item.id || "",
+              status: item.status || "",
+              recipientName: item.recipientName || "",
+              total: item.total || 0,
+          }))
         : [];
-    return auth?.isLogin ? (
+    return (
         <div className="p-4 sm:p-6 md:p-8">
             <h1 className="text-2xl font-bold pb-6">Thông tin đơn hàng</h1>
             <Table
                 rowKey="orderNumber"
                 dataSource={dataSource}
                 columns={columns}
-                pagination={{ pageSize: 5 }}
+                pagination={{ pageSize: 10 }}
                 scroll={{ x: 600 }} // For horizontal scroll on smaller screens
-                size="middle" // Adjust table size
             />
         </div>
-    ) : null;
+    );
 };
 
 export default Purchase;
