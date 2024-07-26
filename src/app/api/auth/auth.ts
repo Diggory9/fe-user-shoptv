@@ -182,7 +182,27 @@ const ApiAuth = {
             //     throw new Error("Network response was not ok");
             // }
             // return response;
-        } catch (error) {}
+        } catch (error) { }
     },
+    async authUpdateInfo(body: any) {
+        try {
+            const response = await fetchClient({ method: "PUT", param: `Account/update-user`, body })
+            return response;
+        } catch (error) {
+            throw error
+        }
+
+
+    },
+
+    async authGetInfo({ userId }: { userId: string }) {
+
+        try {
+            const response = await fetchClient({ method: "GET", param: `Account/user/${userId}` })
+            return response;
+        } catch (error) {
+            throw error; // Throw error to handle in calling function
+        }
+    }
 };
 export default ApiAuth;

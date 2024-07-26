@@ -48,7 +48,7 @@ export default function RegisterForm() {
                     ]);
                 }
             }
-        } catch (error) {}
+        } catch (error) { }
     };
     return (
         <Form
@@ -66,7 +66,7 @@ export default function RegisterForm() {
                     },
                     {
                         min: 6,
-                        message: "Username must be at least 6 characters long!",
+                        message: "Username phải lớn hơn hoặc bằng 6 ký tự",
                     },
                 ]}
             >

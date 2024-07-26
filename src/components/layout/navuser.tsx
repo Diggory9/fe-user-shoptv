@@ -22,11 +22,16 @@ export default function NavUser() {
         },
         {
             key: "2",
+            icon: <UserOutlined />,
+            label: <Link href={"/user/update-info"}>Cập nhật thông tin</Link>,
+        },
+        {
+            key: "3",
             icon: <SolutionOutlined />,
             label: <Link href={"/user/purchase"}>Đơn hàng</Link>,
         },
         {
-            key: "3",
+            key: "4",
             icon: <KeyOutlined />,
             label: <Link href={"/user/reset-password"}>Đổi mật khẩu</Link>,
         },
