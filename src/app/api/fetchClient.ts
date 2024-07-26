@@ -35,8 +35,10 @@ export const fetchClient = async (config: Config) => {
     });
 
     if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorResponse = await response.json();
+        throw new Error(` ${errorResponse || 'Unknown error'}`);
     }
+
 
     return await response.json();
 };
