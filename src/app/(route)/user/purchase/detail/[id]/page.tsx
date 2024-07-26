@@ -10,6 +10,7 @@ import Link from "next/link";
 import ApiOrder from "@/app/api/order/order-api";
 import { formatDateToRender } from "@/helpers/helper";
 import { OrderModel } from "@/models/order-model";
+import { toast, Toaster } from "sonner";
 
 export default function OrderDetail({ params }: { params: { id: string } }) {
     const [order, setOrder] = useState<OrderModel | null>(null);
@@ -47,7 +48,15 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
     };
     const handleCancelOrder = async (orderId: string) => {
         try {
-            await ApiOrder.updateStatusOrder(orderId, "CANCELLED");
+            await ApiOrder.updateStatusOrder(orderId, "CANCELLED").then(
+                (res) => {
+                    if (res.ok) {
+                        toast.success("Thành công");
+                    } else {
+                        toast.error("Thất bại");
+                    }
+                }
+            );
             setOrder((prevOrder) =>
                 prevOrder ? { ...prevOrder, status: "CANCELLED" } : null
             );
@@ -120,6 +129,8 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
             </div>
             <div className="bg-white shadow-md rounded-lg p-6">
                 <h2 className="text-2xl font-semibold">Thông tin sản phẩm</h2>
+                <Toaster position="top-right" richColors></Toaster>
+
                 <div className="mt-6 border-2 rounded-lg p-4">
                     {order?.orderItems?.map((item) => (
                         <div
@@ -148,6 +159,11 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                                         </p>
                                         <p className="text-sm text-gray-600">
                                             Số lượng: {item?.quantity}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">
+                                            Giá tiền: {item?.price}
                                         </p>
                                     </div>
                                 </div>

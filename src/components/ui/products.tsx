@@ -19,7 +19,7 @@ export function Products({ products, loading }: ProductsProps) {
             ) : (
                 <div className="grid grid-cols-1 gap-x-3 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                     {!products || products.length === 0
-                        ? "Không có dữ liệu"
+                        ? null
                         : products.map((product) => (
                               <CardProduct key={product.id} product={product} />
                           ))}

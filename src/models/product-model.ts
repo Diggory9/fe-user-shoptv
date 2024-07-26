@@ -8,7 +8,7 @@ export interface ProductItemModel {
 
     id: string;
     quantity?: number;
-    color?: { id?: string, colorName?: string, colorCode?: string };
+    color?: { id?: string; colorName?: string; colorCode?: string };
     productImages?: ProductImageModel[];
 }
 export interface ProductModel {
@@ -18,16 +18,15 @@ export interface ProductModel {
     productQuantity?: number;
     productBrand?: string;
     price?: number;
-    supplier?: { id: string, name: string };
+    supplier?: { id: string; name: string };
     image?: string;
-    category: { id: string, name: string };
+    category: { id: string; name: string };
     categoryId?: string;
     discountId?: string;
     productItems: ProductItemModel[];
     productSpecifications?: ProductSpecificationModel[];
-    rating?: { rate?: number, count?: number };
-    productDiscount?: { id?: null, type?: null, value?: number };
-
+    rating?: { rate?: number; count?: number };
+    productDiscount?: { id?: string; type?: string; value?: number };
 }
 export interface ProductSpecificationModel {
     id?: string;
