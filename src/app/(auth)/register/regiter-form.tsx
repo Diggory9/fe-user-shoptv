@@ -136,7 +136,7 @@ export default function RegisterForm() {
             <Button
                 type="primary"
                 htmlType="submit"
-                className="w-full"
+                className="w-full text-white"
                 style={{ backgroundColor: "#14452f", borderColor: "#0A5C56" }}
             >
                 Đăng ký
