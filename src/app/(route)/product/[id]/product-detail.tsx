@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import RelatedProducts from "./component/related-products";
 
 export const DetailProduct = ({ id }: { id: string }) => {
     const dispatch = useAppDispatch();
@@ -28,15 +29,13 @@ export const DetailProduct = ({ id }: { id: string }) => {
     useEffect(() => {
         ApiProduct.getDetailProducts(id).then((res) => {
             setProduct(res.data);
-            setProductItemId(res.data.productItems[0].id)
+            setProductItemId(res.data.productItems[0].id);
             const productBeforeItemSelected = updateProductItemSelected(
                 res.data,
                 res.data.productItems[0].id
             );
             setProduct(productBeforeItemSelected!);
-        })
-
-
+        });
     }, [id]);
 
     const updateProductItemSelected = (
@@ -75,18 +74,21 @@ export const DetailProduct = ({ id }: { id: string }) => {
         } else {
             try {
                 let productInCart = cart.data?.find((item) => {
-                    return item.id === productItemId
-                })
+                    return item.id === productItemId;
+                });
                 let quantityIncr = quantity;
                 if (productInCart) {
-                    quantityIncr += productInCart.quantity
+                    quantityIncr += productInCart.quantity;
                 }
-                ApiCart.addProductToCart(auth?.data?.id || '', productItemId || '', null, quantityIncr).then((data) => {
+                ApiCart.addProductToCart(
+                    auth?.data?.id || "",
+                    productItemId || "",
+                    null,
+                    quantityIncr
+                ).then((data) => {
                     dispatch(setDataCart(data.data));
-                    toast.success(
-                        "Thêm vào giỏ hàng thành công"
-                    );
-                })
+                    toast.success("Thêm vào giỏ hàng thành công");
+                });
             } catch (error) {
                 toast.error(
                     "Thêm vào giỏ hàng thất bại xin thử lại sau ít phút"
@@ -96,16 +98,14 @@ export const DetailProduct = ({ id }: { id: string }) => {
     };
 
     const onChangeValue = (value: number) => {
-
         if (value < 1) {
-            value = 1
+            value = 1;
         }
         if (value >= (selectedProductItem?.quantity || 1)) {
-            value = (selectedProductItem?.quantity || 1)
+            value = selectedProductItem?.quantity || 1;
         }
-        setQuantity(value)
-    }
-
+        setQuantity(value);
+    };
 
     const selectedProductItem = product?.productItems?.find(
         (item) => item.selected
@@ -116,8 +116,8 @@ export const DetailProduct = ({ id }: { id: string }) => {
                 <div className="lg:flex lg:items-center lg:justify-between">
                     <div className="lg:w-1/2">
                         {product &&
-                            product.productItems &&
-                            product.productItems.length > 0 ? (
+                        product.productItems &&
+                        product.productItems.length > 0 ? (
                             <>
                                 <CImageGallery product={product} />
                             </>
@@ -182,7 +182,9 @@ export const DetailProduct = ({ id }: { id: string }) => {
                                 <div className="w-[120px]">
                                     <InputQuantity
                                         className="w-full"
-                                        max={selectedProductItem?.quantity || 99}
+                                        max={
+                                            selectedProductItem?.quantity || 99
+                                        }
                                         value={quantity}
                                         onClickMinus={() =>
                                             setQuantity(
@@ -191,10 +193,15 @@ export const DetailProduct = ({ id }: { id: string }) => {
                                         }
                                         onClickPlus={() =>
                                             setQuantity(
-                                                quantity == selectedProductItem?.quantity ? selectedProductItem?.quantity : quantity + 1
+                                                quantity ==
+                                                    selectedProductItem?.quantity
+                                                    ? selectedProductItem?.quantity
+                                                    : quantity + 1
                                             )
                                         }
-                                        onChange={(value) => onChangeValue(value as number)}
+                                        onChange={(value) =>
+                                            onChangeValue(value as number)
+                                        }
                                     />
                                 </div>
                                 <div className=" text-center">
@@ -220,9 +227,15 @@ export const DetailProduct = ({ id }: { id: string }) => {
                     <div className="w-full lg:flex lg:items-center lg:justify-between">
                         <ProductTabsProps
                             description={product?.description || ""}
-                            productId={product?.id || ''}
+                            productId={product?.id || ""}
                         />
                     </div>
+                </div>
+                <div className="w-4/5 py-12 mx-auto">
+                    <h1 className="p-4 text-3xl text-center font-semibold">
+                        Có thể bạn cũng thích
+                    </h1>
+                    <RelatedProducts productId={id || ""} />
                 </div>
             </div>
         </div>

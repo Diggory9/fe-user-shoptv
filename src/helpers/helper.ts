@@ -69,3 +69,10 @@ export const validatePassword = (_: any, value: any) => {
     }
     return Promise.resolve();
 };
+export const truncateContent = (content: string, maxLength: number) => {
+    const plainTextContent = content.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
+    if (plainTextContent.length > maxLength) {
+        return plainTextContent.substring(0, maxLength) + "...";
+    }
+    return plainTextContent;
+};

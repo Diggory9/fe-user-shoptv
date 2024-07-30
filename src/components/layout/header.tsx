@@ -4,12 +4,13 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useAppSelector } from "@/redux/hooks";
 import Search from "antd/es/input/Search";
 import { Toaster } from "sonner";
-import { Badge, Button } from "antd";
+import { Badge, Button, Dropdown, Menu } from "antd";
 import CartDrawer from "@/components/ui/cart-drawer";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import CustomDropdown from "../ui/DropDownUser";
+import DropdownCollection from "../ui/dropdown-collection";
 
 export default function Header() {
     const router = useRouter();
@@ -17,6 +18,7 @@ export default function Header() {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const auth = useAppSelector((state) => state.authCredentials);
     const cart = useAppSelector((state) => state.cartCredentials);
+    const [isClient, setIsClient] = useState(false);
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
@@ -30,12 +32,20 @@ export default function Header() {
     const onSearch = async (value: string) => {
         router.push(`/search?query=${value}&offset=1&limit=10`);
     };
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
-
+    const collectionMenu = (
+        <Menu>
+            <Menu.Item key="1">
+                <Link href="/collection/tables-chairs">Bàn ghế</Link>
+            </Menu.Item>
+            <Menu.Item key="2">
+                <Link href="/collection/household-items">Đồ dùng</Link>
+            </Menu.Item>
+        </Menu>
+    );
     return (
         <>
             <Suspense>
@@ -96,12 +106,7 @@ export default function Header() {
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link
-                                            className="px-2 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
-                                            href=""
-                                        >
-                                            Bộ sưu tập
-                                        </Link>
+                                        <DropdownCollection />
                                     </li>
                                     <li>
                                         <Link

@@ -10,11 +10,22 @@ import { Suspense, useEffect, useState } from "react";
 import ApiProduct from "./api/product/product";
 import Link from "next/link";
 import { Spin } from "antd";
+import ApiBanner from "./api/banner/api-banner";
 
 export default function Home() {
     const [dataProduct, setDataProduct] = useState<ProductModel[]>([]);
     const [loading, setLoading] = useState(false);
-
+    const [dataBanners, setDataBanners] = useState<[]>([]);
+    useEffect(() => {
+        ApiBanner.getGroupBannersByName("home page")
+            .then((res) => {
+                setDataBanners(res.data.banners);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+    console.log(dataBanners);
     useEffect(() => {
         setLoading(true);
         ApiProduct.getProductPublished({
@@ -39,7 +50,7 @@ export default function Home() {
 
     return (
         <>
-            <BannerSlide listImage={bannerImage} />
+            <BannerSlide listImage={dataBanners} />
             <Category />
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
