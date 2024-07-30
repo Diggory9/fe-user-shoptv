@@ -6,12 +6,12 @@ const SalesPolicy = () => {
             <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">1. Thanh toán</h2>
                 <p className="mb-2">
-                    TVfurni chỉ áp dụng duy nhất một hình thức thanh toán online qua thẻ tín dụng và chuyển khoản, cụ thể như sau:
+                    TVfurni chỉ áp dụng các hình thức thanh toán online qua thẻ tín dụng và chuyển khoản, COD cụ thể như sau:
                 </p>
                 <ol className="list-decimal pl-6 space-y-2">
                     <li>Khách hàng tìm hiểu thông tin về sản phẩm.</li>
                     <li>Khách hàng đồng ý các điều khoản mua hàng, chi phí giao hàng và lắp đặt.</li>
-                    <li>Khách hàng thanh toán qua các thẻ VNPAY hoặc chuyển khoản.</li>
+                    <li>Khách hàng thanh toán qua các thẻ VNPAY hoặc chuyển khoản, COD.</li>
                     <li>Hệ thống TVfurni xác nhận thông tin khách hàng và nhân viên sẽ gọi lại tư vấn thỏa thuận đơn giá và xác nhận đơn hàng.</li>
                     <li>Khách hàng nhận hàng, kiểm tra và xác nhận với nhân viên.</li>
                 </ol>

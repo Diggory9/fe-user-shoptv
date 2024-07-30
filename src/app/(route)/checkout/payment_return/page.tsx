@@ -67,6 +67,8 @@ export default function CheckoutReturn() {
                         subTitle={
                             <div>
                                 <p>Mã giao dịch: {order?.id}</p>
+                                <p>Người nhận: {order?.recipientName}</p>
+                                <p>Số điện thoại người nhận: {order?.phone}</p>
                                 <p>
                                     Số tiền:{" "}
                                     {numberFormatLocationVietNam(
