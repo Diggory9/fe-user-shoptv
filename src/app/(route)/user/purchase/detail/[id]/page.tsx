@@ -9,8 +9,9 @@ import Link from "next/link";
 
 import ApiOrder from "@/app/api/order/order-api";
 import { formatDateToRender } from "@/helpers/helper";
-import { OrderModel } from "@/models/order-model";
+import { MItem, OrderModel } from "@/models/order-model";
 import { toast, Toaster } from "sonner";
+import ColDetailOrder from "@/components/ui/col-table-item-detail-order";
 
 export default function OrderDetail({ params }: { params: { id: string } }) {
     const [order, setOrder] = useState<OrderModel | null>(null);
@@ -64,6 +65,10 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
             console.error("Error cancelling order:", error);
         }
     };
+    const calculateItemTotal = (item: any) => {
+        return item.quantity * item.price;
+    };
+
     const showDeleteConfirm = (orderId: string) => {
         confirm({
             title: "Bạn có muốn hủy đơn hàng",
@@ -133,59 +138,22 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
 
                 <div className="mt-6 border-2 rounded-lg p-4">
                     {order?.orderItems?.map((item) => (
-                        <div
-                            key={item.productItemId}
-                            className="border-b pb-2 mb-4"
-                        >
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center">
-                                    <img
-                                        src={
-                                            item?.product?.image || "/img/1.png"
-                                        }
-                                        alt={item?.product?.productName}
-                                        className="w-16 h-16 mr-4"
-                                    />
-                                    <div>
-                                        <h2 className="text-lg font-semibold">
-                                            {item?.product?.productName}
-                                        </h2>
-                                        <p className="text-sm text-gray-600">
-                                            Màu sắc:{" "}
-                                            {
-                                                item?.product?.colorItem
-                                                    ?.colorName
-                                            }
-                                        </p>
-                                        <p className="text-sm text-gray-600">
-                                            Số lượng: {item?.quantity}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-600">
-                                            Giá tiền: {item?.price}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex">
-                                    <p className="text-lg pr-5">
-                                        {item?.price?.toLocaleString()} VND
-                                    </p>
-                                    <Link
-                                        href={`/user/review/${item?.product?.productId}`}
-                                    >
-                                        <Button
-                                            type="primary"
-                                            disabled={
-                                                order?.status !== "COMPLETED"
-                                            }
-                                        >
-                                            Đánh giá sản phẩm
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+                        <>
+                            <h2 className="text-lg font-semibold">
+                                Ghi chú {calculateItemTotal(item)}
+                            </h2>
+                            <ColDetailOrder data={item}></ColDetailOrder>
+                            <Link
+                                href={`/user/review/${item?.product?.productId}`}
+                            >
+                                <Button
+                                    type="primary"
+                                    disabled={order?.status !== "COMPLETED"}
+                                >
+                                    Đánh giá sản phẩm
+                                </Button>
+                            </Link>
+                        </>
                     ))}
                 </div>
 

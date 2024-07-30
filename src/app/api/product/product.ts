@@ -102,5 +102,67 @@ const ApiProduct = {
             throw error;
         }
     },
+    async getProductsbyPrice({
+        fromPrice,
+        toPrice,
+        pageNumber,
+        pageSize,
+    }: {
+        fromPrice: number;
+        toPrice: number;
+        pageNumber: number;
+        pageSize: number;
+    }) {
+        try {
+            const response = await fetch(
+                `${process.env.API_URL}/Product/list-publish-to-price?fromPrice=${fromPrice}&toPrice=${toPrice}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            // console.log(data);
+            return data;
+        } catch (error) {
+            console.error("Fetch error: ", error);
+            throw error;
+        }
+    },
+    async getProductsOfTheSameCategory({
+        id,
+        pageNumber,
+        pageSize,
+    }: {
+        id: string;
+        pageNumber: number;
+        pageSize: number;
+    }) {
+        try {
+            const response = await fetch(
+                `${process.env.API_URL}/Product/products-of-the-same-category/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            // console.log(data);
+            return data;
+        } catch (error) {
+            console.error("Fetch error: ", error);
+            throw error;
+        }
+    },
 };
 export default ApiProduct;
