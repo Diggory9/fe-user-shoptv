@@ -47,7 +47,7 @@ const CardProduct = ({ product }: CardProductProps) => {
             </p>
 
             <div className="mt-2">
-                {product.productDiscount ? (
+                {product.productDiscount?.id ? (
                     <>
                         <span className="ml-2 text-lg text-red-500 font-medium">
                             {numberFormatLocationVietNam(price || 0)}

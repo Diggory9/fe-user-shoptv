@@ -139,9 +139,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                 <div className="mt-6 border-2 rounded-lg p-4">
                     {order?.orderItems?.map((item) => (
                         <>
-                            <h2 className="text-lg font-semibold">
-                                Ghi chú {calculateItemTotal(item)}
-                            </h2>
+                            <h2 className="text-lg font-semibold">Ghi chú</h2>
                             <ColDetailOrder data={item}></ColDetailOrder>
                             <Link
                                 href={`/user/review/${item?.product?.productId}`}

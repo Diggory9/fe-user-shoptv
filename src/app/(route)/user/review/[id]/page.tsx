@@ -11,6 +11,7 @@ import ApiProduct from "@/app/api/product/product";
 import { ProductModel } from "@/models/product-model";
 import { ReviewModel } from "@/models/review-model";
 import MUploadImageMultiple from "@/components/ui/UploadImageMulti";
+import Image from "next/image";
 
 export default function Review({ params }: { params: { id: string } }) {
     const router = useRouter();
@@ -57,9 +58,11 @@ export default function Review({ params }: { params: { id: string } }) {
             <div key={dataProduct?.id} className="mt-6  p-4  ">
                 <div className="flex justify-between items-center ">
                     <div className="flex items-center ml-10">
-                        <img
-                            src={dataProduct?.image}
-                            alt={dataProduct?.name}
+                        <Image
+                            width={50}
+                            height={50}
+                            src={dataProduct?.image || ""}
+                            alt={dataProduct?.name || ""}
                             className="w-20 h-20 mr-4 border-2"
                         />
                         <div>

@@ -19,7 +19,6 @@ export default function CheckOutPage() {
         null
     );
     const [IsPolicyChecked, setIsPolicyChecked] = useState(false);
-
     const [isloading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
     const router = useRouter();
@@ -28,7 +27,7 @@ export default function CheckOutPage() {
 
     useEffect(() => {
         if (!auth.isLogin) {
-            router.push('/login?callbackUrl=/checkout');
+            router.push("/login?callbackUrl=/checkout");
         }
         const fetchProvinces = async () => {
             await ApiDHN.getProvinces()
@@ -49,7 +48,7 @@ export default function CheckOutPage() {
                     };
                 }),
             };
-            console.log(payload);
+            // console.log(payload);
 
             await ApiCheckout.reviewCart(payload).then((res) => {
                 setDataReview(res?.data);
@@ -63,19 +62,20 @@ export default function CheckOutPage() {
         await ApiDHN.getDistricts({ provinceId: value })
             .then((res) => {
                 setDataDistrict(res.data);
+                form.setFieldsValue({ district: null, ward: null });
             })
             .catch((err) => {
                 console.error("Error during fetch:", err);
             });
-        form.setFieldValue("district", null);
-        form.setFieldValue("ward", null);
+        // form.setFieldValue("district", null);
+        // form.setFieldValue("ward", null);
     };
     const handleChoiceDistrict = async (value: any) => {
         await ApiDHN.getWards({ districtId: value })
             .then((res) => {
                 setDataWard(res.data);
             })
-            .catch((err) => { });
+            .catch((err) => {});
     };
     const provinceOptions = dataProvince?.map((item) => ({
         value: item?.ProvinceID,
@@ -135,7 +135,6 @@ export default function CheckOutPage() {
             try {
                 ApiCheckout.saveOrder(payload)
                     .then((response) => {
-
                         localStorage.setItem(
                             "dataOrder",
                             JSON.stringify(response.data)
@@ -148,8 +147,7 @@ export default function CheckOutPage() {
                             "Đơn đặt hàng không thành công xin thử lại sau ít phút"
                         );
                     });
-            } catch (error) {
-            }
+            } catch (error) {}
         } else if (values.typePayment == "VNPAY") {
             try {
                 await ApiCheckout.getUrlVnpay(payload)
@@ -160,10 +158,9 @@ export default function CheckOutPage() {
                         setIsLoading(false);
                         toast.error(
                             "Đơn đặt hàng không thành công xin thử lại sau ít phút"
-
                         );
                     });
-            } catch (error) { }
+            } catch (error) {}
         }
     };
 
@@ -201,10 +198,6 @@ export default function CheckOutPage() {
                                                 message:
                                                     "Vui lòng nhập tên người nhận",
                                             },
-                                            {
-                                                pattern: /^[a-zA-Z\s]+$/,
-                                                message: "Tên không hợp lệ",
-                                            },
                                         ]}
                                     >
                                         <Input
@@ -224,9 +217,10 @@ export default function CheckOutPage() {
                                                     "Vui lòng nhập số điện thoại",
                                             },
                                             {
-                                                pattern: /^[0-9]{10}$/,
+                                                pattern:
+                                                    /^0[3|5|7|8|9][0-9]{8}$/,
                                                 message:
-                                                    "Số điện thoại không hợp lệ",
+                                                    "Số điện thoại không hợp lệ!",
                                             },
                                         ]}
                                     >
@@ -283,7 +277,8 @@ export default function CheckOutPage() {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: "Vui lòng chọn Quận/Huyện",
+                                                message:
+                                                    "Vui lòng chọn Quận/Huyện",
                                             },
                                         ]}
                                     >
@@ -322,7 +317,8 @@ export default function CheckOutPage() {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: "Vui lòng chọn Phường/Xã",
+                                                message:
+                                                    "Vui lòng chọn Phường/Xã",
                                             },
                                         ]}
                                     >
@@ -355,7 +351,8 @@ export default function CheckOutPage() {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: "Vui lòng nhập địa chỉ",
+                                                message:
+                                                    "Vui lòng nhập địa chỉ",
                                             },
                                         ]}
                                     >
@@ -384,7 +381,9 @@ export default function CheckOutPage() {
                                             {dataReview?.reviewCheckoutItems!.map(
                                                 (item) => (
                                                     <div
-                                                        key={item.productItemId}
+                                                        key={
+                                                            item?.productItemId
+                                                        }
                                                         className="flex items-center space-x-4 py-4 border-b border-gray-200"
                                                     >
                                                         <div className="w-1/3 overflow-hidden">
@@ -399,25 +398,27 @@ export default function CheckOutPage() {
                                                         </div>
                                                         <div>
                                                             <p className="text-xl font-semibold ">
-                                                                {item?.productName}
+                                                                {
+                                                                    item?.productName
+                                                                }
                                                             </p>
                                                             <p className="text-gray-600">
                                                                 Số lượng:{" "}
-                                                                {item.quantity}
+                                                                {item?.quantity}
                                                             </p>
-                                                            {item.amountDiscount !==
+                                                            {item?.amountDiscount !==
                                                                 0 && (
-                                                                    <p className="text-red-600">
-                                                                        Giảm giá:{" "}
-                                                                        {numberFormatLocationVietNam(
-                                                                            item.amountDiscount
-                                                                        )}
-                                                                    </p>
-                                                                )}
+                                                                <p className="text-red-600">
+                                                                    Giảm giá:{" "}
+                                                                    {numberFormatLocationVietNam(
+                                                                        item?.amountDiscount
+                                                                    )}
+                                                                </p>
+                                                            )}
                                                             <p className="text-gray-600">
                                                                 Giá:{" "}
                                                                 {numberFormatLocationVietNam(
-                                                                    item.price
+                                                                    item?.price
                                                                 )}
                                                             </p>
                                                         </div>
@@ -439,7 +440,8 @@ export default function CheckOutPage() {
                                             <span>
                                                 &nbsp;
                                                 {numberFormatLocationVietNam(
-                                                    dataReview?.discountAmount || 0
+                                                    dataReview?.discountAmount ||
+                                                        0
                                                 )}
                                             </span>
                                         </p>
@@ -454,8 +456,6 @@ export default function CheckOutPage() {
                                         </p>
                                         <p className="border-2 border-gray-600 my-5"></p>
                                         <div className="p-5 border-t-2 border-gray-300 ">
-
-
                                             <Form.Item
                                                 name="typePayment"
                                                 label="Phương thức thanh toán: "
@@ -501,15 +501,22 @@ export default function CheckOutPage() {
                                                             value
                                                                 ? Promise.resolve()
                                                                 : Promise.reject(
-                                                                    new Error(
-                                                                        'Vui lòng đồng ý với chính sách mua hàng'
-                                                                    )
-                                                                ),
+                                                                      new Error(
+                                                                          "Vui lòng đồng ý với chính sách mua hàng"
+                                                                      )
+                                                                  ),
                                                     },
                                                 ]}
                                             >
-                                                <Checkbox onChange={handlePolicyChange}>
-                                                    Tôi đồng ý với <Link href="/sales-policy">chính sách mua hàng</Link>
+                                                <Checkbox
+                                                    onChange={
+                                                        handlePolicyChange
+                                                    }
+                                                >
+                                                    Tôi đồng ý với{" "}
+                                                    <Link href="/sales-policy">
+                                                        chính sách mua hàng
+                                                    </Link>
                                                 </Checkbox>
                                             </Form.Item>
                                             <Button

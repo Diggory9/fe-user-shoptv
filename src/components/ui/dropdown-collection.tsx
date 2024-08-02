@@ -20,20 +20,19 @@ export default function DropdownCollection() {
     const handleClick = (id: string) => {
         router.push(`/blog/${id}`);
     };
-    console.log(dataCollection);
+    // console.log(dataCollection);
 
-    const collectionMenu = (
-        <Menu>
-            {dataCollection.map((item: any) => (
-                <Menu.Item key={item.id} onClick={() => handleClick(item.id)}>
-                    {item.name}
-                </Menu.Item>
-            ))}
-        </Menu>
-    );
+    const items = dataCollection.map((item: any) => ({
+        key: item.id,
+        label: <span onClick={() => handleClick(item.id)}>{item.name}</span>,
+    }));
+
+    const collectionMenu = {
+        items,
+    };
 
     return (
-        <Dropdown overlay={collectionMenu} trigger={["hover"]}>
+        <Dropdown menu={collectionMenu} trigger={["hover"]}>
             <span>
                 <a
                     className="px-2 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
