@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setAuthData } from "@/redux/features/authSlice";
 import { GoogleSignInButton } from "@/components/ui/auth-button";
-import { useSession } from "next-auth/react";
 import { Button, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
@@ -13,14 +12,14 @@ import ApiAuth from "@/app/api/auth/auth";
 import ApiCart from "@/app/api/cart/cart";
 import { setDataCart } from "@/redux/features/cartSlice";
 import { error } from "console";
+
+import { useSession } from "next-auth/react"
 export default function LoginForm() {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-
     const router = useRouter();
     const params = useSearchParams();
-
-    // const auth = useAppSelector((state) => state.authCredentials);
+    const { data: session, status } = useSession()
     const onFinish = (value: any) => {
         console.log(value);
         ApiAuth.authLogin({
@@ -45,6 +44,22 @@ export default function LoginForm() {
         });
     };
 
+    useEffect(() => {
+        console.log(session)
+        if (status === 'authenticated' && session?.idToken) {
+            console.log('Session authenticated with Google');
+
+            const loginExternalLogin = async () => {
+                const response = await ApiAuth.authExternalLogin({ idToken: session.idToken, provider: 'google' });
+                const data = response.data;
+                dispatch(setAuthData(data));
+                console.log(data);
+                router.push(params.get("callbackUrl") || "/");
+            }
+            loginExternalLogin();
+
+        }
+    }, [session]);
     return (
         <>
             <Form

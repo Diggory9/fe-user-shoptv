@@ -16,15 +16,14 @@ const initialState: UserState = {
     error: null,
     status: null,
 }
-export const login = createAsyncThunk('user/login', async ({ email, password }: { email?: string, password?: string }) => {
-    const response = await ApiAuth.authLogin({ email, password });
-    const data = response.data;
-    return data;
-});
+// export const login = createAsyncThunk('user/login', async ({ email, password }: { email?: string, password?: string }) => {
+//     const response = await ApiAuth.authLogin({ email, password });
+//     const data = response.data;
+//     return data;
+// });
 export const externalLogin = createAsyncThunk('user/externalLogin', async ({ provider, idToken }: { provider: string, idToken: string }) => {
     const response = await ApiAuth.authExternalLogin({ provider, idToken });
     const data = response.data;
-    const { jwToken, refreshToken, email } = data;
     console.log(data);
     return data;
 });
@@ -50,16 +49,6 @@ const authSlice = createSlice({
         }
 
     }, extraReducers(buiders) {
-        buiders.addCase(login.fulfilled, (state, action) => {
-            state.data = action.payload;
-            state.isLogin = true;
-            state.error = null;
-            state.status = 'succeeded';
-        });
-        buiders.addCase(login.rejected, (state, action) => {
-            state.error = action.error.message || "";
-            state.status = 'failed';
-        });
         buiders.addCase(logout.fulfilled, (state) => {
             state.data = null;
             state.isLogin = false;
