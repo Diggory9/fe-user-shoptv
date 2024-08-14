@@ -51,7 +51,6 @@ export default function CheckOutPage() {
                 console.error("Error fetching user info:", err);
             }
         };
-
         fetchProvinces();
         fetchInfo();
     }, [auth.isLogin, auth.data?.id]);
@@ -255,7 +254,7 @@ export default function CheckOutPage() {
     ) : null;
 }
 
-function getValueBeforeSpace(str: string) {
-    const parts = str.split(" ");
-    return parts.shift();
-}
+// function getValueBeforeSpace(str: string) {
+//     const parts = str.split(" ");
+//     return parts.shift();
+// }

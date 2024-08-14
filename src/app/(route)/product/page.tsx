@@ -14,7 +14,7 @@ export default function CProduct() {
     const [loading, setLoading] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [showCategory, setShowCategory] = useState(false);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(8);
     const [pageNumber, setPageNumber] = useState(1);
     const [totalProduct, setTotalProduct] = useState(1);
 
@@ -39,6 +39,7 @@ export default function CProduct() {
             .then((res) => {
                 setDataProduct(res.data);
                 setTotalProduct(res.total);
+
                 setLoading(false);
             })
             .catch((error) => {
@@ -56,6 +57,7 @@ export default function CProduct() {
             })
                 .then((res) => {
                     setDataProduct(res.data);
+                    setTotalProduct(res.total);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -70,7 +72,11 @@ export default function CProduct() {
                 pageSize: pageSize,
             })
                 .then((res) => {
+                    console.log(res);
+
                     setDataProduct(res.data);
+                    setTotalProduct(res.count);
+
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -113,6 +119,7 @@ export default function CProduct() {
                 <Pagination
                     onChange={onChange}
                     defaultCurrent={1}
+                    pageSize={pageSize}
                     total={totalProduct}
                 />
             </div>

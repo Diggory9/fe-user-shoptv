@@ -28,9 +28,11 @@ export default function Profile() {
         };
         fetchInfo();
     }, []);
-
+    const fullAddress = `${info?.address || ""} ${info?.ward || ""} ${
+        info?.district || ""
+    } ${info?.province || ""}`.trim();
     return (
-        <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
+        <div className="max-w-xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
             <div className="flex items-center space-x-4">
                 <div className="w-full">
                     <div className="flex justify-between w-full">
@@ -76,8 +78,7 @@ export default function Profile() {
                             Địa chỉ:{" "}
                         </h3>
                         <p className="text-gray-600 mt-2 w-1/2">
-                            {`${info?.address} - ${info?.ward} - ${info?.district} - ${info?.province}` ||
-                                "Chưa thiết lập địa chỉ"}
+                            {fullAddress || "Chưa thiết lập địa chỉ"}
                         </p>
                     </div>
                 </div>

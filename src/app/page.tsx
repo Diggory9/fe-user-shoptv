@@ -30,7 +30,7 @@ export default function Home() {
         setLoading(true);
         ApiProduct.getProductPublished({
             pageNumber: 1,
-            pageSize: 20,
+            pageSize: 8,
         })
             .then((res) => {
                 setDataProduct(res.data);

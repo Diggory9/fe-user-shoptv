@@ -36,16 +36,16 @@ export default function Header() {
     useEffect(() => {
         setIsClient(true);
     }, []);
-    const collectionMenu = (
-        <Menu>
-            <Menu.Item key="1">
-                <Link href="/collection/tables-chairs">Bàn ghế</Link>
-            </Menu.Item>
-            <Menu.Item key="2">
-                <Link href="/collection/household-items">Đồ dùng</Link>
-            </Menu.Item>
-        </Menu>
-    );
+    // const collectionMenu = (
+    //     <Menu>
+    //         <Menu.Item key="1">
+    //             <Link href="/collection/tables-chairs">Bàn ghế</Link>
+    //         </Menu.Item>
+    //         <Menu.Item key="2">
+    //             <Link href="/collection/household-items">Đồ dùng</Link>
+    //         </Menu.Item>
+    //     </Menu>
+    // );
     return (
         <>
             <Suspense>
@@ -111,9 +111,17 @@ export default function Header() {
                                     <li>
                                         <Link
                                             className="px-2 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
-                                            href=""
+                                            href="/about-us"
                                         >
                                             Liên hệ
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            className="px-2 hover:underline font-serif uppercase font-normal text-sm hover:text-orange-400"
+                                            href="/sales-policy"
+                                        >
+                                            Chính sách
                                         </Link>
                                     </li>
                                 </ul>
